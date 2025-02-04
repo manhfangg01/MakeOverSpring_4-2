@@ -1,0 +1,14 @@
+1. Lỗi APPLICATION FAILED TO START
+    + Reason 1: Failed to determine a suitable drive class  (Không tìm thấy driver)
+    - Lý do: chưa đồng bộ hóa các dependencies
+    -> Cách sửa: đợi có cửa số yêu cầu đồng bộ thì nhấn "Yes"
+    
+
+
+2. Lỗi liên quan đến database hoặc Hibernate
+    + Có thể do schema trong SQL workbenrch
+    -> Cách sửa coi lại các biến thành phần trong file application.properties 
+        Coi lại dòng số 2 nếu không có database nào có tên như cái tên sau dấu gạch thì phải vào workbernch để tạo 1 cái schema có tên như vậy
+
+
+3. Biện pháp cuối cùng: xóa file target + chạy lại

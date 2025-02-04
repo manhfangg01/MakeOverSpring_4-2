@@ -1,0 +1,3 @@
+in this static folder all the files is public so it can be access by internet users. Ex: images, html, css, js
+
+it means that   http://localhost:8080/fangg.html used for access html file of website

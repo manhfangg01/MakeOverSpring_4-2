@@ -1,0 +1,2 @@
+in usual, while resources/static saves static file,
+this webapp folder usually save dynamic rendering file, and these file can't be access offline
