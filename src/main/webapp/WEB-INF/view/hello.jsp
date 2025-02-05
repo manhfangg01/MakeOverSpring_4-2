@@ -1,3 +1,6 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%> <%@ taglib prefix="c"
+uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,6 +9,6 @@
     <title>Document</title>
   </head>
   <body>
-    JSP pleased to meet you Manh
+    JSP pleased to meet you ${eric}
   </body>
 </html>
