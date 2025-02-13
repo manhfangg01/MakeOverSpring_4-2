@@ -50,6 +50,7 @@ uri="http://www.springframework.org/tags/form" prefix="form" %>
                         <th>ID</th>
                         <th>Email</th>
                         <th>Full Name</th>
+                        <th>Role</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -59,6 +60,7 @@ uri="http://www.springframework.org/tags/form" prefix="form" %>
                           <th>${user.id}</th>
                           <td>${user.email}</td>
                           <td>${user.fullName}</td>
+                          <td> ${user.role.name}</td>
                           <td>
                             <a
                               href="/admin/user/${user.id}"

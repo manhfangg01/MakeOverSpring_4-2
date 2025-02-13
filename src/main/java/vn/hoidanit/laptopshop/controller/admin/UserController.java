@@ -30,22 +30,13 @@ public class UserController {
 
     private final UserService userService;
     private final UploadService uploadService;
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public UserController(UserService userService, UploadService uploadService,
             PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.uploadService = uploadService;
         this.passwordEncoder = passwordEncoder;
-    }
-
-    @GetMapping("/")
-    public String getHomePage(Model model) {
-        String test = this.userService.handleHello();
-        model.addAttribute("eric", test);
-        model.addAttribute("hoidanit", "from controller with model");
-        System.out.println(this.userService.getAllUsers());
-        return "hello";
     }
 
     @GetMapping("/admin/user") // RequestMapping mặc định sử dụng method GET
