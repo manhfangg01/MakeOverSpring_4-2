@@ -10,6 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,11 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-
-import jakarta.servlet.ServletContext;
+import jakarta.validation.Valid;
 import vn.hoidanit.laptopshop.domain.User;
-import vn.hoidanit.laptopshop.repository.UserRepository;
 import vn.hoidanit.laptopshop.service.UploadService;
 import vn.hoidanit.laptopshop.service.UserService;
 
@@ -57,14 +56,25 @@ public class UserController {
                                        // tạo xong bởi form thì, trang form sau
                                        // khi create sẽ tự động mapping qua
                                        // value của map này
-    public String createUserPage(Model model, @ModelAttribute("newUser") User hoidanit,
-            @RequestParam("hoidanitFile") MultipartFile file) { // Với annotation
+    public String createUserPage(Model model, @ModelAttribute("newUser") @Valid User hoidanit,
+            BindingResult bindingResult,
+            @RequestParam("hoidanitFile") MultipartFile file) { // Thứ tự tham số và cũng quan trọng trong java Spring
+        // Với annotation
         // ModelAttribute nó sẽ hứng
         // đối tượng trả ra của form ở
         // đây tên là newUser rồi sau
         // đó truyền hết thông tin đó
         // cho một đối tượng(User) tên
         // là hoidanit
+
+        List<FieldError> errors = bindingResult.getFieldErrors();
+        for (FieldError error : errors) {
+            System.out.println(error.getObjectName() + " - " + error.getDefaultMessage());
+        }
+
+        // validate
+
+        //
 
         String avatar = this.uploadService.handleUploadSingleFile(file, "avatar");
         String hashPassword = this.passwordEncoder.encode(hoidanit.getPassword());

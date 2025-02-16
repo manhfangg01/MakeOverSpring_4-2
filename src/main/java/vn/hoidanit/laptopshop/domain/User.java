@@ -10,6 +10,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity // Để biến một class thành 1 table trong DB
 @Table(name = "users") // Được dùng để tạo ra một table y chang table
@@ -19,10 +23,24 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto Increase
     private long id;
 
+    @NotNull
+    @Email
     private String email;
+
+    @NotNull
+    // @Size(min = 3)
+    @Min(3)
     private String password;
+
+    @NotNull
+    // @Size(min = 2)
+    @Min(2)
     private String fullName;
+
+    @NotNull
     private String address;
+
+    @NotNull
     private String phone;
     private String avatar;
 
