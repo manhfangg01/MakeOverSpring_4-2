@@ -15,7 +15,6 @@ uri="http://www.springframework.org/tags/form" %>
     <title>Create User - Hỏi Dân IT</title>
     <link href="/css/styles.css" rel="stylesheet" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
     <script>
       $(document).ready(() => {
         const avatarFile = $("#avatarFile");
@@ -26,7 +25,6 @@ uri="http://www.springframework.org/tags/form" %>
         });
       });
     </script>
-
     <script
       src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
       crossorigin="anonymous"
@@ -43,7 +41,10 @@ uri="http://www.springframework.org/tags/form" %>
             <h1 class="mt-4">Manage Users</h1>
             <ol class="breadcrumb mb-4">
               <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-              <li class="breadcrumb-item active">Users</li>
+              <li class="breadcrumb-item active">
+                <a href="/admin/user">User</a>
+              </li>
+              <li class="breadcrumb-item active">Create</li>
             </ol>
             <div class="mt-5">
               <div class="row">
@@ -57,22 +58,32 @@ uri="http://www.springframework.org/tags/form" %>
                     class="row"
                     enctype="multipart/form-data"
                   >
-                    <!-- enctype là một định dạng của form html cho phép tải lên file-->
                     <div class="mb-3 col-12 col-md-6">
+                      <c:set var="errorEmail">
+                        <form:errors path="email" cssClass="invalid-feedback" />
+                      </c:set>
                       <label class="form-label">Email:</label>
                       <form:input
                         type="email"
-                        class="form-control"
+                        class="form-control ${not empty errorEmail ? 'is-invalid' : ''}"
                         path="email"
                       />
+                      ${errorEmail}
                     </div>
                     <div class="mb-3 col-12 col-md-6">
+                      <c:set var="errorPassword">
+                        <form:errors
+                          path="password"
+                          cssClass="invalid-feedback"
+                        />
+                      </c:set>
                       <label class="form-label">Password:</label>
                       <form:input
                         type="password"
-                        class="form-control"
+                        class="form-control ${not empty errorPassword ? 'is-invalid' : ''}"
                         path="password"
                       />
+                      ${errorPassword}
                     </div>
                     <div class="mb-3 col-12 col-md-6">
                       <label class="form-label">Phone number:</label>
@@ -83,12 +94,19 @@ uri="http://www.springframework.org/tags/form" %>
                       />
                     </div>
                     <div class="mb-3 col-12 col-md-6">
+                      <c:set var="errorFullName">
+                        <form:errors
+                          path="fullName"
+                          cssClass="invalid-feedback"
+                        />
+                      </c:set>
                       <label class="form-label">Full Name:</label>
                       <form:input
                         type="text"
-                        class="form-control"
+                        class="form-control ${not empty errorFullName ? 'is-invalid' : ''}"
                         path="fullName"
                       />
+                      ${errorFullName}
                     </div>
                     <div class="mb-3 col-12">
                       <label class="form-label">Address:</label>
@@ -102,7 +120,6 @@ uri="http://www.springframework.org/tags/form" %>
                     <div class="mb-3 col-12 col-md-6">
                       <label class="form-label">Role:</label>
                       <form:select class="form-select" path="role.name">
-                        <!--Path này nói cho controller biết là form chọn chỉ nhập vào role.name thôi-->
                         <form:option value="ADMIN">ADMIN</form:option>
                         <form:option value="USER">USER</form:option>
                       </form:select>
@@ -113,15 +130,9 @@ uri="http://www.springframework.org/tags/form" %>
                         class="form-control"
                         type="file"
                         id="avatarFile"
-                        name="hoidanitFile"
-                        multiple
                         accept=".png, .jpg, .jpeg"
+                        name="hoidanitFile"
                       />
-                      <!-- Giải thích tại sao lại sử dụng name mà không phải path
-                       1. Do đối tượng User mà được gửi lên từ controller không có attribute(thuộc tính) nào là "File"
-                       2. Path được dùng để ánh xạ thuộc tính trên form với thuộc tính của đối tượng nhập nên vì không có attribute nào để ánh xạ nên không thể dùng path
-                       ! multiple dùng để upload nhiều file
-                       -->
                     </div>
                     <div class="col-12 mb-3">
                       <img

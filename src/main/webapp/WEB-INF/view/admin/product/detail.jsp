@@ -13,7 +13,7 @@ uri="http://www.springframework.org/tags/form" prefix="form" %>
     />
     <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
     <meta name="author" content="Hỏi Dân IT" />
-    <title>View-User - Hỏi Dân IT</title>
+    <title>View-Product - Hỏi Dân IT</title>
     <link href="/css/styles.css" rel="stylesheet" />
     <!-- UPDATED: Thêm Bootstrap -->
     <link
@@ -37,7 +37,7 @@ uri="http://www.springframework.org/tags/form" prefix="form" %>
             <ol class="breadcrumb mb-4">
               <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
               <li class="breadcrumb-item active">
-                <a href="/admin/user">User</a>
+                <a href="/admin/product">Product</a>
               </li>
               <li class="breadcrumb-item active">Detail</li>
             </ol>
@@ -45,7 +45,7 @@ uri="http://www.springframework.org/tags/form" prefix="form" %>
               <div class="row">
                 <div class="col-12 mx-auto">
                   <div class="d-flex justify-content-between">
-                    <h3>User detail with id = ${id}</h3>
+                    <h3>Product detail with id = ${id}</h3>
                   </div>
 
                   <hr />
@@ -56,37 +56,46 @@ uri="http://www.springframework.org/tags/form" prefix="form" %>
                   >
                     <!-- UPDATED: Điều chỉnh kích thước card -->
                     <div class="card col-12 col-md-6">
-                      <div class="card-header">User information</div>
+                      <div class="card-header">Product information</div>
                       <ul class="list-group list-group-flush">
-                        <li class="list-group-item">ID: ${user.id}</li>
-                        <li class="list-group-item">Email: ${user.email}</li>
+                        <li class="list-group-item">ID: ${product.id}</li>
                         <li class="list-group-item">
-                          Full Name: ${user.fullName}
+                          Product's name: ${product.name}
+                        </li>
+                        <li class="list-group-item">Price: ${product.price}</li>
+                        <li class="list-group-item">
+                          Detail Description: ${product.detailDesc}
                         </li>
                         <li class="list-group-item">
-                          Address: ${user.role.name}
+                          Short Description: ${product.shortDesc}
                         </li>
                         <li class="list-group-item">
-                          Address: ${user.address}
+                          Quantity: ${product.quantity}
+                        </li>
+                        <li class="list-group-item">
+                          Factory: ${product.factory}
+                        </li>
+                        <li class="list-group-item">
+                          Target: ${product.target}
                         </li>
                       </ul>
                     </div>
 
                     <!-- UPDATED: Điều chỉnh ảnh avatar -->
                     <div class="card col-12 col-md-5 text-center">
-                      <div class="card-header"><h6>User Avatar</h6></div>
+                      <div class="card-header"><h6>Product Image</h6></div>
                       <div class="p-3">
                         <img
-                          src="/images/avatar/${user.avatar}"
+                          src="/images/productImage/${product.image}"
                           class="img-fluid rounded-circle object-fit-cover"
                           style="width: 150px; height: 150px"
-                          alt="User Avatar"
+                          alt="Product Image"
                         />
                       </div>
                     </div>
                   </div>
 
-                  <a href="/admin/user" class="btn btn-success mt-3">Back</a>
+                  <a href="/admin/product" class="btn btn-success mt-3">Back</a>
                 </div>
               </div>
             </div>

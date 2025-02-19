@@ -19,4 +19,15 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    public void handleSaveProduct(Product product) {
+        this.productRepository.save(product);
+    }
+
+    public Product getProductById(long id) {
+        return this.productRepository.findById(id);
+    }
+
+    public void deleteProductById(long id) {
+        this.productRepository.deleteById(id);
+    }
 }

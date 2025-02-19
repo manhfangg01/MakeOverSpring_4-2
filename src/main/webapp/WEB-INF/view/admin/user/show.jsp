@@ -31,7 +31,7 @@ uri="http://www.springframework.org/tags/form" prefix="form" %>
             <h1 class="mt-4">Manage Users</h1>
             <ol class="breadcrumb mb-4">
               <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-              <li class="breadcrumb-item active">Users</li>
+              <li class="breadcrumb-item active">User</li>
             </ol>
             <div class="mt-5">
               <div class="row">
@@ -60,7 +60,7 @@ uri="http://www.springframework.org/tags/form" prefix="form" %>
                           <th>${user.id}</th>
                           <td>${user.email}</td>
                           <td>${user.fullName}</td>
-                          <td> ${user.role.name}</td>
+                          <td>${user.role.name}</td>
                           <td>
                             <a
                               href="/admin/user/${user.id}"

@@ -28,23 +28,23 @@ uri="http://www.springframework.org/tags/form" prefix="form" %>
       <div id="layoutSidenav_content">
         <main>
           <div class="container-fluid px-4">
-            <h1 class="mt-4">Update Users</h1>
+            <h1 class="mt-4">Update Product</h1>
             <ol class="breadcrumb mb-4">
               <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
               <li class="breadcrumb-item active">
-                <a href="/admin/user">User</a>
+                <a href="/admin/product">Product</a>
               </li>
               <li class="breadcrumb-item active">Update</li>
             </ol>
             <div class="mt-5">
               <div class="row">
                 <div class="col-md-6 col-12 mx-auto">
-                  <h3>Update a user</h3>
+                  <h3>Update a product</h3>
                   <hr />
                   <form:form
                     method="post"
-                    action="/admin/user/update"
-                    modelAttribute="newUser"
+                    action="/admin/product/update"
+                    modelAttribute="newProduct"
                   >
                     <div class="mb-3" style="display: none">
                       <label class="form-label">Id:</label>
@@ -52,40 +52,75 @@ uri="http://www.springframework.org/tags/form" prefix="form" %>
                     </div>
 
                     <div class="mb-3">
-                      <label class="form-label">Email:</label>
+                      <label class="form-label">Name:</label>
                       <form:input
-                        type="email"
+                        type="name"
                         class="form-control"
-                        path="email"
-                        disabled="true"
+                        path="name"
                       />
                     </div>
 
                     <div class="mb-3">
-                      <label class="form-label">Phone number:</label>
+                      <label class="form-label">Price:</label>
                       <form:input
-                        type="text"
+                        type="number"
+                        min="0"
+                        step="0.01"
                         class="form-control"
-                        path="phone"
+                        path="price"
                       />
                     </div>
                     <div class="mb-3">
-                      <label class="form-label">Full Name:</label>
+                      <label class="form-label">Detail Description:</label>
                       <form:input
                         type="text"
                         class="form-control"
-                        path="fullName"
+                        path="detailDesc"
                       />
                     </div>
                     <div class="mb-3">
-                      <label class="form-label">Address:</label>
+                      <label class="form-label">Short Description:</label>
                       <form:input
                         type="text"
                         class="form-control"
-                        path="address"
+                        path="shortDesc"
                       />
                     </div>
-
+                    <div class="mb-3">
+                      <label class="form-label">Quantity:</label>
+                      <form:input
+                        type="number"
+                        class="form-control"
+                        path="quantity"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">Factory:</label>
+                      <form:select class="form-select" path="factory">
+                        <!--Path này nói cho controller biết là form chọn chỉ nhập vào role.name thôi-->
+                        <form:option value="Apple">Apple(Macbook)</form:option>
+                        <form:option value="Asus">Asus</form:option>
+                        <form:option value="Lenovo">Lenovo</form:option>
+                        <form:option value="Dell">Dell</form:option>
+                        <form:option value="LG">LG</form:option>
+                        <form:option value="Acer">Acer</form:option>
+                      </form:select>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">Target:</label>
+                      <form:select class="form-select" path="target">
+                        <!--Path này nói cho controller biết là form chọn chỉ nhập vào role.name thôi-->
+                        <form:option value="Gaming">Gaming</form:option>
+                        <form:option value="Mỏng nhẹ">Mỏng nhẹ</form:option>
+                        <form:option value="Kinh doanh">Kinh doanh</form:option>
+                        <form:option value="Sinh viên - Văn Phòng"
+                          >Sinh viên - Văn Phòng</form:option
+                        >
+                        <form:option value="Thiết kế đồ họa"
+                          >Thiết kế đồ họa</form:option
+                        >
+                      </form:select>
+                    </div>
                     <button type="submit" class="btn btn-warning">
                       Update
                     </button>

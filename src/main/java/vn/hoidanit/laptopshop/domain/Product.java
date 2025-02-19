@@ -5,6 +5,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "products")
@@ -12,11 +16,26 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @NotNull
+    @Size(min = 3, message = "Name phải có tối thiểu 3 kí tự")
     private String name;
+    @DecimalMin(value = "0", inclusive = false, message = "Price phải lớn hơn 0") // ĐƯợc dùng cho dấu chấm động
+                                                                                  // Inclusive để chỉ tính bao gồm, nếu
+                                                                                  // inclusive bằng false -> k đc lấy
+                                                                                  // bằng 0
     private double price;
     private String image;
-    private String detailDesc;
+
+    @NotNull
+    @Size(min = 3, message = "detailDescription không được bỏ trống")
+    private String detailDesc; // Khi được chuyển sang DB thì sẽ trở thành VARCHAR(255) chỉ chứa được tối đa
+                               // 255 kí tự
+    @NotNull
+    @Size(min = 3, message = "shortDescription không được bỏ trống")
     private String shortDesc;
+
+    @Min(value = 1, message = "Quantity tối thiểu là 1")
     private long quantity;
     private long sold;
     private String factory;

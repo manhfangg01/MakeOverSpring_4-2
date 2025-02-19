@@ -57,7 +57,7 @@ public class UserController {
                                        // khi create sẽ tự động mapping qua
                                        // value của map này
     public String createUserPage(Model model, @ModelAttribute("newUser") @Valid User hoidanit,
-            BindingResult bindingResult,
+            BindingResult newUserBidingResult,
             @RequestParam("hoidanitFile") MultipartFile file) { // Thứ tự tham số và cũng quan trọng trong java Spring
         // Với annotation
         // ModelAttribute nó sẽ hứng
@@ -67,14 +67,18 @@ public class UserController {
         // cho một đối tượng(User) tên
         // là hoidanit
 
-        List<FieldError> errors = bindingResult.getFieldErrors();
+        List<FieldError> errors = newUserBidingResult.getFieldErrors();
         for (FieldError error : errors) {
-            System.out.println(error.getObjectName() + " - " + error.getDefaultMessage());
+            System.out.println(error.getField() + " - " + error.getDefaultMessage());
         }
 
         // validate
-
-        //
+        if (newUserBidingResult.hasErrors()) {
+            return "/admin/user/create";
+        }
+        // tại sao không dùng "redirect ở đây" - do ta cần hiển thị thông báo lỗi nên sẽ
+        // render ra trang hiện tại
+        // Nếu như redirect thì sẽ làm mất đi giá trị cũ
 
         String avatar = this.uploadService.handleUploadSingleFile(file, "avatar");
         String hashPassword = this.passwordEncoder.encode(hoidanit.getPassword());
