@@ -1,5 +1,6 @@
 package vn.hoidanit.laptopshop.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,6 +30,7 @@ public class Product {
 
     @NotNull
     @Size(min = 3, message = "detailDescription không được bỏ trống")
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String detailDesc; // Khi được chuyển sang DB thì sẽ trở thành VARCHAR(255) chỉ chứa được tối đa
                                // 255 kí tự
     @NotNull

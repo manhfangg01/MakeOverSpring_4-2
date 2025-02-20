@@ -1,6 +1,7 @@
 package vn.hoidanit.laptopshop.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getAllProducts() {
+    public List<Product> fetchProducts() {
         return productRepository.findAll();
     }
 
@@ -23,11 +24,12 @@ public class ProductService {
         this.productRepository.save(product);
     }
 
-    public Product getProductById(long id) {
+    public Optional<Product> fetchProductById(long id) {
         return this.productRepository.findById(id);
     }
 
     public void deleteProductById(long id) {
         this.productRepository.deleteById(id);
     }
+
 }

@@ -3,8 +3,11 @@ package vn.hoidanit.laptopshop.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.eclipse.tags.shaded.org.apache.xpath.operations.Bool;
 import org.springframework.stereotype.Service;
 import vn.hoidanit.laptopshop.domain.User;
+import vn.hoidanit.laptopshop.domain.dto.RegisterDTO;
+
 import vn.hoidanit.laptopshop.repository.RoleRepositoty;
 import vn.hoidanit.laptopshop.repository.UserRepository;
 import vn.hoidanit.laptopshop.domain.Role;
@@ -23,12 +26,12 @@ public class UserService {
         return "fangg";
     }
 
-    public List<User> getAllUsers() {
-        return this.userRepository.findAll();
+    public User getUserByEmail(String email) {
+        return this.userRepository.findByEmail(email);
     }
 
-    public List<User> getAllUsersByEmail(String email) {
-        return this.userRepository.findByEmail(email);
+    public List<User> getAllUsers() {
+        return this.userRepository.findAll();
     }
 
     public void handleSaveUser(User hoidanit) {
@@ -36,7 +39,7 @@ public class UserService {
     }
 
     public User getUserById(long id) {
-        return this.userRepository.findById(id);
+        return this.userRepository.findById(id).get();
     }
 
     public void deleteUserById(long id) {
@@ -45,5 +48,24 @@ public class UserService {
 
     public Role getRoleByName(String name) {
         return this.roleRepositoty.findByName(name);
+    }
+
+    public User registerDTOtoUser(RegisterDTO registerDTO) {
+        User newUser = new User();
+        newUser.setFullName(registerDTO.getFirstName() + " " + registerDTO.getLastName());
+        newUser.setEmail(registerDTO.getEmail());
+        newUser.setPassword(registerDTO.getPassword());
+        return newUser;
+    }
+
+    public boolean checkEmailExisted(String email) {
+        // if( this.userRepository.findByEmail(email)==null){
+        // return false;
+        // }
+        // return true;
+
+        // To be faster
+        return this.userRepository.existsByEmail(email);
+
     }
 }

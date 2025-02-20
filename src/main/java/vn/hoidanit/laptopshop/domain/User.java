@@ -11,46 +11,43 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import vn.hoidanit.laptopshop.service.validator.StrongPassword;
+import jakarta.validation.constraints.NotNull;
 
-@Entity // Để biến một class thành 1 table trong DB
-@Table(name = "users") // Được dùng để tạo ra một table y chang table
-// hiện tại nhưng khác tên
+@Entity
+@Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto Increase
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Email(message = "Email này không hợp lệ", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
-    @NotEmpty(message = "Email không được để trống")
+    @NotNull
+    @Email(message = "Email không hợp lệ", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
     private String email;
 
     @NotNull
-    @Size(min = 2, message = "Password phải có tối thiểu 2 kí tự")
-    // @Min(3)
+    @Size(min = 2, message = "Password phải có tối thiểu 2 ký tự")
+    @StrongPassword(message = "password hợp lệ phải có từ 8 kí tự trở lên")
     private String password;
 
     @NotNull
-    @Size(min = 3, message = "Fullname phải có tối thiểu 3 kí tự")
-    // @Min(2)
+    @Size(min = 3, message = "Fullname phải có tối thiểu 3 ký tự")
     private String fullName;
 
-    @NotNull
     private String address;
-
-    @NotNull
     private String phone;
+
     private String avatar;
 
+    // roleId
+    // User many -> to one -> role
     @ManyToOne
-    @JoinColumn(name = "role_id") // Foreign Key
+    @JoinColumn(name = "role_id")
     private Role role;
 
     @OneToMany(mappedBy = "user")
-    private List<Order> orders;
+    List<Order> orders;
 
     public Role getRole() {
         return role;
@@ -116,18 +113,18 @@ public class User {
         this.phone = phone;
     }
 
-    @Override
-    public String toString() {
-        return "User [id=" + id + ", email=" + email + ", password=" + password + ", fullName=" + fullName
-                + ", address=" + address + ", phone=" + phone + "]";
-    }
-
     public String getAvatar() {
         return avatar;
     }
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", email=" + email + ", password=" + password + ", fullName=" + fullName
+                + ", address=" + address + ", phone=" + phone + ", avatar=" + avatar + "]";
     }
 
 }

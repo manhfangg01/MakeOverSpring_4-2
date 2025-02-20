@@ -69,7 +69,7 @@ public class UserController {
 
         List<FieldError> errors = newUserBidingResult.getFieldErrors();
         for (FieldError error : errors) {
-            System.out.println(error.getField() + " - " + error.getDefaultMessage());
+            System.out.println(">>>>>" + error.getField() + " - " + error.getDefaultMessage());
         }
 
         // validate

@@ -34,7 +34,7 @@ public class ProductController {
 
     @GetMapping("/admin/product")
     public String getProductPage(Model model) {
-        List<Product> products = productService.getAllProducts();
+        List<Product> products = productService.fetchProducts();
         model.addAttribute("products", products);
         return "admin/product/show";
     }
@@ -69,21 +69,21 @@ public class ProductController {
     public String getProductDetailPage(Model model, @PathVariable long id) {
 
         model.addAttribute("id", id);
-        Product product = this.productService.getProductById(id);
+        Product product = this.productService.fetchProductById(id).get();
         model.addAttribute("product", product);
         return "admin/product/detail";
     }
 
     @GetMapping("/admin/product/update/{id}")
     public String getUpdateUserPage(Model model, @PathVariable long id) {
-        Product currentProduct = this.productService.getProductById(id);
+        Product currentProduct = this.productService.fetchProductById(id).get();
         model.addAttribute("newProduct", currentProduct);
         return "admin/product/update";
     }
 
     @PostMapping("/admin/product/update")
     public String postUpdateUser(Model model, @ModelAttribute("newProduct") Product hoidanit) {
-        Product currentProduct = this.productService.getProductById(hoidanit.getId());
+        Product currentProduct = this.productService.fetchProductById(hoidanit.getId()).get();
         if (currentProduct != null) {
             currentProduct.setName(hoidanit.getName());
             currentProduct.setPrice(hoidanit.getPrice());
@@ -98,7 +98,8 @@ public class ProductController {
 
     @GetMapping("/admin/product/delete/{id}")
     public String getDeleteProductPage(Model model, @PathVariable long id) {
-        Product product = this.productService.getProductById(id);
+        Product product = this.productService.fetchProductById(id).get(); // Get dùng để lấy đối tượng từ optional nếu
+                                                                          // nó không null
         if (product == null) {
             return "redirect:/admin/product";
         }
