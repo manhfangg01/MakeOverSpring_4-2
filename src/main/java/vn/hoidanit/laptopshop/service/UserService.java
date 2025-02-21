@@ -26,10 +26,6 @@ public class UserService {
         return "fangg";
     }
 
-    public User getUserByEmail(String email) {
-        return this.userRepository.findByEmail(email);
-    }
-
     public List<User> getAllUsers() {
         return this.userRepository.findAll();
     }
@@ -68,4 +64,9 @@ public class UserService {
         return this.userRepository.existsByEmail(email);
 
     }
+
+    public User getUserByEmail(String email) {
+        return this.userRepository.findByEmail(email);
+    }
+
 }

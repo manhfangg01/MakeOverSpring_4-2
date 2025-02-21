@@ -12,13 +12,14 @@ uri="http://www.springframework.org/tags/form" %>
     />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Login - SB Admin</title>
-    <link href="css/styles.css" rel="stylesheet" />
+    <title>Login - Laptopshop</title>
+    <link href="/css/styles.css" rel="stylesheet" />
     <script
       src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
       crossorigin="anonymous"
     ></script>
   </head>
+
   <body class="bg-primary">
     <div id="layoutAuthentication">
       <div id="layoutAuthentication_content">
@@ -31,71 +32,54 @@ uri="http://www.springframework.org/tags/form" %>
                     <h3 class="text-center font-weight-light my-4">Login</h3>
                   </div>
                   <div class="card-body">
-                    <form:form
-                      method="post"
-                      action="/login"
-                      modelAttribute="registeredUser"
-                    >
-                      <c:set var="errorPassword">
-                        <form:errors
-                          path="password"
-                          cssClass="invalid-feedback"
-                        />
-                      </c:set>
-                      <c:set var="errorEmail">
-                        <form:errors path="email" cssClass="invalid-feedback" />
-                      </c:set>
+                    <form method="post" action="/login">
+                      <c:if test="${param.error != null}">
+                        <div class="my-2" style="color: red">
+                          Invalid email or password.
+                        </div>
+                      </c:if>
+                      <!-- c:if nếu có lỗi thì in ra-->
+                      <c:if test="${param.logout != null}">
+                        <!-- Nếu như trên đường link url có keyword logout thì-->
+                        <div class="my-2" style="color: green">
+                          Logout success
+                        </div>
+                      </c:if>
+
                       <div class="form-floating mb-3">
-                        <form:input
-                          id="email"
-                          name="email"
-                          class="form-control ${not empty errorEmail ? 'is-invalid' : ''}"
-                          path="email"
+                        <input
+                          class="form-control"
                           type="email"
                           placeholder="name@example.com"
+                          name="username"
                         />
-                        <label for="email">Email address</label>
-                        ${errorEmail}
+                        <label>Email address</label>
                       </div>
-
                       <div class="form-floating mb-3">
-                        <form:input
-                          id="password"
-                          name="password"
-                          class="form-control ${not empty errorPassword ? 'is-invalid' : ''}"
-                          path="password"
+                        <input
+                          class="form-control"
                           type="password"
                           placeholder="Password"
+                          name="password"
                         />
-                        <label for="password">Password</label>
-                        ${errorPassword}
+                        <label>Password</label>
+                      </div>
+                      <div>
+                        <input
+                          type="hidden"
+                          name="${_csrf.parameterName}"
+                          value="${_csrf.token}"
+                        />
                       </div>
 
-                      <!-- <div class="form-check mb-3">
-                        <input
-                          class="form-check-input"
-                          id="inputRememberPassword"
-                          type="checkbox"
-                          value=""
-                        />
-                        <label
-                          class="form-check-label"
-                          for="inputRememberPassword"
-                          >Remember Password</label
-                        >
-                      </div> -->
-                      <div
-                        class="d-flex align-items-center justify-content-between mt-4 mb-0"
-                      >
-                        <button
-                          type="submit"
-                          class="btn btn-primary"
-                          style="width: 100%"
-                        >
-                          Login
-                        </button>
+                      <div class="mt-4 mb-0">
+                        <div class="d-grid">
+                          <button class="btn btn-primary btn-block">
+                            Login
+                          </button>
+                        </div>
                       </div>
-                    </form:form>
+                    </form>
                   </div>
                   <div class="card-footer text-center py-3">
                     <div class="small">
@@ -113,6 +97,6 @@ uri="http://www.springframework.org/tags/form" %>
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       crossorigin="anonymous"
     ></script>
-    <script src="js/scripts.js"></script>
+    <script src="/js/scripts.js"></script>
   </body>
 </html>

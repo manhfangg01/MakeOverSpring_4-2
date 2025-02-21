@@ -20,13 +20,13 @@ uri="http://www.springframework.org/tags/form" %>
     ></script>
   </head>
 
-  <body class="bg-primary">
+  <body class="bg-primary" style="overflow: hidden">
     <div id="layoutAuthentication">
       <div id="layoutAuthentication_content">
         <main>
           <div class="container">
             <div class="row justify-content-center">
-              <div class="col-lg-7">
+              <div class="col-lg-6 mb-5">
                 <div class="card shadow-lg border-0 rounded-lg mt-5">
                   <div class="card-header">
                     <h3 class="text-center font-weight-light my-4">
@@ -48,28 +48,42 @@ uri="http://www.springframework.org/tags/form" %>
                       <c:set var="errorEmail">
                         <form:errors path="email" cssClass="invalid-feedback" />
                       </c:set>
+                      <c:set var="errorFirstName">
+                        <form:errors
+                          path="firstName"
+                          cssClass="invalid-feedback"
+                        />
+                      </c:set>
+                      <c:set var="errorLastName">
+                        <form:errors
+                          path="lastName"
+                          cssClass="invalid-feedback"
+                        />
+                      </c:set>
 
                       <div class="row mb-3">
                         <div class="col-md-6">
                           <div class="form-floating mb-3 mb-md-0">
                             <form:input
-                              class="form-control"
+                              class="form-control ${not empty errorFirstName ? 'is-invalid' : ''}"
                               path="firstName"
                               type="text"
                               placeholder="Enter your first name"
                             />
                             <label for="inputFirstName">First name</label>
+                            ${errorFirstName}
                           </div>
                         </div>
                         <div class="col-md-6">
                           <div class="form-floating">
                             <form:input
-                              class="form-control"
+                              class="form-control ${not empty errorLastName ? 'is-invalid' : ''}"
                               path="lastName"
                               type="text"
                               placeholder="Enter your last name"
                             />
                             <label for="inputLastName">Last name</label>
+                            ${errorLastName}
                           </div>
                         </div>
                       </div>

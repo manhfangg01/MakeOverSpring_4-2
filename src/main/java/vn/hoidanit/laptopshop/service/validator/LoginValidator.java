@@ -24,7 +24,7 @@ public class LoginValidator implements ConstraintValidator<LoginChecked, LoginDT
     public boolean isValid(LoginDTO user, ConstraintValidatorContext context) {
         boolean valid = true;
         if (!this.userService.checkEmailExisted(user.getEmail())) {
-            context.buildConstraintViolationWithTemplate("This email is invalid")
+            context.buildConstraintViolationWithTemplate("This email is not exist")
                     .addPropertyNode("email")
                     .addConstraintViolation()
                     .disableDefaultConstraintViolation();
