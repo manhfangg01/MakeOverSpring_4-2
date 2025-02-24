@@ -119,9 +119,14 @@ public class SecurityConfiguration {
 
                 .sessionManagement((sessionManagement) -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-                        .invalidSessionUrl("/logout?expired")
-                        .maximumSessions(1)
-                        .maxSessionsPreventsLogin(false))
+                        .invalidSessionUrl("/logout?expired") // When session expired -> automatically log out
+                        .maximumSessions(1) // for one account -> how many utilities can hava
+                        .maxSessionsPreventsLogin(false)) // Depend on the above one,
+                                                          // if .maximumSessions(1)
+                                                          // *When ...PreventsLogin(true) -> the one who login first can
+                                                          // use and the second login one was prevented to login
+                                                          // *When ...PreventsLogin(false) -> the one who login first is
+                                                          // force to logout and let the second login one go to session
 
                 .logout(logout -> logout.deleteCookies("JSESSIONID").invalidateHttpSession(true))
 
