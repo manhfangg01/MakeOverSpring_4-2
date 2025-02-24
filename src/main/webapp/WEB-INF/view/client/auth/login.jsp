@@ -64,6 +64,15 @@ uri="http://www.springframework.org/tags/form" %>
                         />
                         <label>Password</label>
                       </div>
+                      <div class="mb-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          name="password"
+                        />
+                        <label>Remember me</label>
+                      </div>
+
                       <div>
                         <input
                           type="hidden"
