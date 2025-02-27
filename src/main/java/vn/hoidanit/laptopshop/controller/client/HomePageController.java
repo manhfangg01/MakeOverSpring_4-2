@@ -2,22 +2,18 @@ package vn.hoidanit.laptopshop.controller.client;
 
 import java.util.List;
 
-import org.springframework.boot.autoconfigure.jms.JmsProperties.Listener.Session;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import vn.hoidanit.laptopshop.domain.Product;
 import vn.hoidanit.laptopshop.domain.User;
-import vn.hoidanit.laptopshop.domain.dto.LoginDTO;
 import vn.hoidanit.laptopshop.domain.dto.RegisterDTO;
 import vn.hoidanit.laptopshop.service.ProductService;
 import vn.hoidanit.laptopshop.service.UserService;
@@ -39,10 +35,11 @@ public class HomePageController {
     }
 
     @GetMapping("/")
-    public String getHomePage(Model model) {
+    public String getHomePage(Model model, HttpSession session) {
+        User newUser = this.userService.getUserByEmail((String) session.getAttribute("email"));
+        session.setAttribute("sum", newUser.getCart().getCartDetails().size());
         List<Product> products = this.productService.fetchProducts();
         model.addAttribute("products", products);
-
         return "client/homepage/show";
     }
 
@@ -53,25 +50,19 @@ public class HomePageController {
     }
 
     @PostMapping("/register")
-    public String handleRegister(@ModelAttribute("registerUser") @Valid RegisterDTO registerDTO,
-            BindingResult bindingResult)
-    // @Valid khi hệ thống đọc tới Annotation này nó sẽ chạy vào lớp RegisterDTO và
-    // kiểm tra ValidataAnnotation của class đó, ở đây sẽ là RegisterChecked
-    {
-        List<FieldError> errors = bindingResult.getFieldErrors();
-        for (FieldError error : errors) {
-            System.out.println(">>>>>" + error.getField() + " - " + error.getDefaultMessage());
-        }
+    public String handleRegister(
+            @ModelAttribute("registerUser") @Valid RegisterDTO registerDTO,
+            BindingResult bindingResult) {
 
-        // Khi dùng BidingResult thì khi có lỗi thì lỗi đó sẽ được đá thẳng qua view
-        // luôn ta không cần phải dùng model.addAttribute() Để đưa lỗi qua view
-
+        // validate
         if (bindingResult.hasErrors()) {
             return "client/auth/register";
         }
 
         User user = this.userService.registerDTOtoUser(registerDTO);
+
         String hashPassword = this.passwordEncoder.encode(user.getPassword());
+
         user.setPassword(hashPassword);
         user.setRole(this.userService.getRoleByName("USER"));
         // save
@@ -82,26 +73,13 @@ public class HomePageController {
 
     @GetMapping("/login")
     public String getLoginPage(Model model) {
-        model.addAttribute("registeredUser", new LoginDTO());
-        System.out.println(">>> registeredUser created");
+
         return "client/auth/login";
     }
 
-    @PostMapping("/login")
-    public String postLoginPage(@ModelAttribute("registeredUser") @Valid LoginDTO user, BindingResult bindingResult) {
-        List<FieldError> errors = bindingResult.getFieldErrors();
-        for (FieldError error : errors) {
-            System.out.println(">>>>>" + error.getField() + " - " + error.getDefaultMessage());
-        }
-        if (bindingResult.hasErrors()) {
-            return "client/auth/login";
-        }
-
-        return "redirect:/";
-    }
-
     @GetMapping("/access-deny")
-    public String getDenyPage() {
+    public String getDenyPage(Model model) {
+
         return "client/auth/deny";
     }
 

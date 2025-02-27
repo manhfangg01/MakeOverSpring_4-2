@@ -94,7 +94,7 @@ public class SecurityConfiguration {
                         // Khi lưu sẽ là ROLE_ADMIN hoặc ROLE_USER
 
                         .requestMatchers("/register", "/", "/login", "/client/**", "/css/**", "/js/**", "/images/**",
-                                "/product/**")
+                                "/product/**", "/add-product-to-cart/**")
                         .permitAll() // Đây
                         // chính
                         // là

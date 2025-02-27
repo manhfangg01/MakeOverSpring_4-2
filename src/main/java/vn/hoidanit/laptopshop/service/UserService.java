@@ -1,72 +1,65 @@
 package vn.hoidanit.laptopshop.service;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.eclipse.tags.shaded.org.apache.xpath.operations.Bool;
 import org.springframework.stereotype.Service;
+
+import vn.hoidanit.laptopshop.domain.Role;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.domain.dto.RegisterDTO;
-
-import vn.hoidanit.laptopshop.repository.RoleRepositoty;
+import vn.hoidanit.laptopshop.repository.RoleRepository;
 import vn.hoidanit.laptopshop.repository.UserRepository;
-import vn.hoidanit.laptopshop.domain.Role;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final RoleRepositoty roleRepositoty;
+    private final RoleRepository roleRepository;
 
-    public UserService(UserRepository userRepository, RoleRepositoty roleRepositoty) {
+    public UserService(UserRepository userRepository,
+            RoleRepository roleRepository) {
         this.userRepository = userRepository;
-        this.roleRepositoty = roleRepositoty;
-    }
-
-    public String handleHello() {
-        return "fangg";
+        this.roleRepository = roleRepository;
     }
 
     public List<User> getAllUsers() {
         return this.userRepository.findAll();
     }
 
-    public void handleSaveUser(User hoidanit) {
-        this.userRepository.save(hoidanit);
+    public List<User> getAllUsersByEmail(String email) {
+        return this.userRepository.findOneByEmail(email);
+    }
+
+    public User handleSaveUser(User user) {
+        User eric = this.userRepository.save(user);
+        System.out.println(eric);
+        return eric;
     }
 
     public User getUserById(long id) {
-        return this.userRepository.findById(id).get();
+        return this.userRepository.findById(id);
     }
 
-    public void deleteUserById(long id) {
+    public void deleteAUser(long id) {
         this.userRepository.deleteById(id);
     }
 
     public Role getRoleByName(String name) {
-        return this.roleRepositoty.findByName(name);
+        return this.roleRepository.findByName(name);
     }
 
     public User registerDTOtoUser(RegisterDTO registerDTO) {
-        User newUser = new User();
-        newUser.setFullName(registerDTO.getFirstName() + " " + registerDTO.getLastName());
-        newUser.setEmail(registerDTO.getEmail());
-        newUser.setPassword(registerDTO.getPassword());
-        return newUser;
+        User user = new User();
+        user.setFullName(registerDTO.getFirstName() + " " + registerDTO.getLastName());
+        user.setEmail(registerDTO.getEmail());
+        user.setPassword(registerDTO.getPassword());
+        return user;
     }
 
-    public boolean checkEmailExisted(String email) {
-        // if( this.userRepository.findByEmail(email)==null){
-        // return false;
-        // }
-        // return true;
-
-        // To be faster
+    public boolean checkEmailExist(String email) {
         return this.userRepository.existsByEmail(email);
-
     }
 
     public User getUserByEmail(String email) {
         return this.userRepository.findByEmail(email);
     }
-
 }

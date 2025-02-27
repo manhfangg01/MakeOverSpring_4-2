@@ -51,10 +51,20 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         // getEmail
         String userEmail = authentication.getName();
         User userDetail = this.userService.getUserByEmail(userEmail);
-        if (userEmail != null) {
+        if (userDetail != null) {
             session.setAttribute("fullName", userDetail.getFullName());
             session.setAttribute("avatar", userDetail.getAvatar());
+            session.setAttribute("id", userDetail.getId());
+            session.setAttribute("email", userDetail.getEmail());
+            session.setAttribute("address", userDetail.getAddress());
+
+            if (userDetail.getCart() != null) {
+                session.setAttribute("sum", userDetail.getCart().getSum());
+            } else {
+                session.setAttribute("sum", 0); // Nếu chưa có giỏ hàng, set sum = 0
+            }
         }
+
     }
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
