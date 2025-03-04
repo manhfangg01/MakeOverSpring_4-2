@@ -1,5 +1,6 @@
 package vn.hoidanit.laptopshop.service;
 
+import java.lang.StackWalker.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -100,4 +101,39 @@ public class ProductService {
     public Cart fetchByUser(User user) {
         return this.cartRepository.findByUser(user);
     }
+
+    public void handleRemoveCartDetail(long cartDetailId, HttpSession session) {
+        Optional<CartDetail> cartDetailOptional = this.cartDetailRepository.findById(cartDetailId);
+        if (cartDetailOptional.isPresent()) {
+            CartDetail cartDetail = cartDetailOptional.get();
+            Cart currentCart = cartDetail.getCart();
+
+            // delete cart-detail
+            this.cartDetailRepository.deleteById(cartDetailId);
+
+            if (currentCart.getSum() > 1) {
+                // update current cart if sum of cart > 1
+                int s = currentCart.getSum() - 1;
+                currentCart.setSum(s);
+                session.setAttribute("sum", s);
+                this.cartRepository.save(currentCart);
+            } else {
+                // delete cart (sum=1) -> if delete one cartDetail -> delete all Cart
+                this.cartRepository.deleteById(currentCart.getId());
+                session.setAttribute("sum", 0);
+            }
+        }
+    }
+
+    public void handleUpdateCartBeforeCheckout(List<CartDetail> cartDetails) {
+        for (CartDetail cartDetail : cartDetails) {
+            Optional<CartDetail> cdOptional = this.cartDetailRepository.findById(cartDetail.getId());
+            if (cdOptional.isPresent()) {
+                CartDetail currenCartDetail = cdOptional.get();
+                currenCartDetail.setQuantity(cartDetail.getQuantity());
+                this.cartDetailRepository.save(currenCartDetail); // Lưu lại các thao tác của client
+            }
+        }
+    }
+
 }
