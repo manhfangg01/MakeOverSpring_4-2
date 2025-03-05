@@ -18,14 +18,17 @@ import vn.hoidanit.laptopshop.domain.CartDetail;
 import vn.hoidanit.laptopshop.domain.Product;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.service.ProductService;
+import vn.hoidanit.laptopshop.service.UserService;
 
 @Controller
 public class ItemController {
+    private final UserService userService;
 
     private final ProductService productService;
 
-    public ItemController(ProductService productService) {
+    public ItemController(ProductService productService, UserService userService) {
         this.productService = productService;
+        this.userService = userService;
     }
 
     @GetMapping("/product/{id}")
@@ -106,9 +109,18 @@ public class ItemController {
             @RequestParam("receiverName") String receiverName,
             @RequestParam("receiverAddress") String receiverAddress,
             @RequestParam("receiverPhone") String receiverPhone) {
+        User currentUser = new User();
         HttpSession session = request.getSession(false);
+        long userId = (long) session.getAttribute("id");
+        currentUser = this.userService.getUserById(userId);
 
-        return "redirect:/";
+        this.productService.handlePlaceOrder(currentUser, session, receiverName, receiverAddress, receiverPhone);
+        return "redirect:/thanks";
+    }
+
+    @GetMapping("/thanks")
+    public String getThanksPage() {
+        return "client/cart/thanks";
     }
 
 }

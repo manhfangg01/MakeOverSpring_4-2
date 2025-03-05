@@ -8,19 +8,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import vn.hoidanit.laptopshop.domain.CartDetail;
 import vn.hoidanit.laptopshop.domain.Product;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.domain.dto.RegisterDTO;
 import vn.hoidanit.laptopshop.service.ProductService;
 import vn.hoidanit.laptopshop.service.UserService;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class HomePageController {
@@ -39,9 +34,7 @@ public class HomePageController {
     }
 
     @GetMapping("/")
-    public String getHomePage(Model model, HttpSession session) {
-        User newUser = this.userService.getUserByEmail((String) session.getAttribute("email"));
-        session.setAttribute("sum", newUser.getCart().getCartDetails().size());
+    public String getHomePage(Model model) {
         List<Product> products = this.productService.fetchProducts();
         model.addAttribute("products", products);
         return "client/homepage/show";
@@ -85,15 +78,6 @@ public class HomePageController {
     public String getDenyPage(Model model) {
 
         return "client/auth/deny";
-    }
-
-    @PostMapping("/delete-cart-product/{id}")
-    public String postMethodName(@PathVariable long id, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        long cartDetailId = id;
-        this.productService.handleRemoveCartDetail(cartDetailId, session);
-        return "redirect:/cart";
-
     }
 
 }

@@ -59,10 +59,23 @@
                                     </ol>
                                 </nav>
                             </div>
-                            <div class="table-responsive">
+                            <c:if test="${ empty cartDetails}">
+                                            <div class="col-12 mt-5">
+          <div class="alert alert-warning" role="alert">
+           Không có sản phẩm nào trong giỏ hàng của bạn
+          </div>
+        </div>
+
+                                            
+                                        </c:if>
+                            
+                            <c:if test="${not empty cartDetails}">
+                                <div class="table-responsive">
                                 <table class="table">
+                                    
                                     <thead>
                                         <tr>
+                                            <th scope="col">Mua</th>
                                             <th scope="col">Sản phẩm</th>
                                             <th scope="col">Tên</th>
                                             <th scope="col">Giá cả</th>
@@ -72,17 +85,20 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <c:if test="${ empty cartDetails}">
-                                            <tr>
-                                                <td colspan="6">
-                                                    Không có sản phẩm trong giỏ hàng
-                                                </td>
-                                            </tr>
-                                        </c:if>
+                                        
+                                        <tr>
+                                             <div class="d-flex align-items-center custom-control">
+                                <label for="checkboxCart"> <p class="checkBoxStatus" style="margin-top: 0;">Chọn tất cả sản phẩm </p></label>
+                                <input type="checkbox" value="true" class="custom-control-input" id="checkboxCart" >
+                               
+                            </div>
+                                        </tr>
                                         <c:forEach var="cartDetail" items="${cartDetails}" varStatus="status">
-
+                                              
                                             <tr>
+                                               <td> <input type="checkbox" value="true" style="font-size: 16px; height: 1.25rem; width: 1.25rem;"></td>
                                                 <th scope="row">
+                                                    
                                                     <div class="d-flex align-items-center">
                                                         <img src="/images/productImage/${cartDetail.product.image}"
                                                             class="img-fluid me-5 rounded-circle"
@@ -144,7 +160,6 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <c:if test="${not empty cartDetails}">
                                 <div class="mt-5 row g-4 justify-content-start">
                                     <div class="col-12 col-md-8">
                                         <div class="bg-light rounded">
@@ -175,7 +190,7 @@
                                             <form:form action="/confirm-checkout" method="post" modelAttribute="cart">
                                                 <input type="hidden" name="${_csrf.parameterName}"
                                                     value="${_csrf.token}" />
-                                                <div style="display: none;">
+                                                <div style="display: block;">
                                                     <c:forEach var="cartDetail" items="${cart.cartDetails}"
                                                         varStatus="status">
                                                         <div class="mb-3">

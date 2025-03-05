@@ -280,7 +280,41 @@
 
 /*** service End ***/
 
+/*** EmptyCart Start ***/
+.emptyCart {
+  align-items: center;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  padding: 100px 0;
+  text-align: center;
+}
+
+/*** EmptyCart End ***/
+
 /*** Fruits Start ***/
+
+/* checkbox */
+.custom-control {
+  display: block;
+  min-height: 1.5rem;
+  padding-left: 1.5rem;
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+}
+.custom-control-input {
+  height: 1.25rem;
+  left: 0;
+
+  position: absolute;
+  width: 1rem;
+  z-index: -1;
+  box-sizing: border-box;
+  padding: 0;
+  font-size: 16px;
+}
+
 .fruite .tab-class .nav-item a.active {
   background: var(--bs-secondary) !important;
 }
