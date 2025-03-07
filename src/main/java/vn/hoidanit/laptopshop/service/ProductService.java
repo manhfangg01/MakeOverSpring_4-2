@@ -147,47 +147,70 @@ public class ProductService {
         }
     }
 
-    public void handlePlaceOrder(User user, HttpSession session, String receiverName, String receiverAddress,
-            String receiverPhone) {
+    public void handlePlaceOrder(
+            User user, HttpSession session,
+            String receiverName, String receiverAddress, String receiverPhone) {
 
-        // Kiểm tra nếu user chưa có cart
-        Cart cart = user.getCart();
-        if (cart == null) {
-            throw new IllegalStateException("User does not have a cart!");
+        // step 1: get cart by user
+        Cart cart = this.cartRepository.findByUser(user);
+        if (cart != null) {
+            List<CartDetail> cartDetails = cart.getCartDetails();
+
+            if (cartDetails != null) {
+
+                // create order
+                Order order = new Order();
+                order.setUser(user);
+                order.setReceiverName(receiverName);
+                order.setReceiverAddress(receiverAddress);
+                order.setReceiverPhone(receiverPhone);
+                order.setStatus("PENDING"); // Dữ liệu mặc định
+
+                double sum = 0;
+                for (CartDetail cd : cartDetails) {
+                    sum += cd.getPrice();
+                }
+                order.setTotalPrice(sum);
+                order = this.orderRepository.save(order);
+
+                // create orderDetail
+
+                for (CartDetail cd : cartDetails) {
+                    OrderDetail orderDetail = new OrderDetail();
+                    orderDetail.setOrder(order);
+                    orderDetail.setProduct(cd.getProduct());
+                    orderDetail.setPrice(cd.getPrice());
+                    orderDetail.setQuantity(cd.getQuantity());
+
+                    this.orderDetailRepository.save(orderDetail);
+                }
+
+                // step 2: delete cart_detail and cart
+                for (CartDetail cd : cartDetails) {
+                    this.cartDetailRepository.deleteById(cd.getId());
+                }
+
+                this.cartRepository.deleteById(cart.getId());
+
+                // step 3 : update session
+                session.setAttribute("sum", 0);
+            }
         }
-
-        Order order = new Order();
-        order.setUser(user);
-        order.setReceiverName(receiverName);
-        order.setReceiverAddress(receiverAddress);
-        order.setReceiverPhone(receiverPhone);
-
-        order = this.orderRepository.save(order);
-
-        // Step 1: Get all OrderDetail from CartDetail
-        List<CartDetail> cartDetails = cart.getCartDetails();
-        if (cartDetails == null || cartDetails.isEmpty()) {
-            throw new IllegalStateException("Cart is empty. Cannot place order!");
-        }
-
-        for (CartDetail cd : cartDetails) {
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setOrder(order);
-            orderDetail.setProduct(cd.getProduct());
-            orderDetail.setPrice(cd.getPrice());
-            orderDetail.setQuantity(cd.getQuantity());
-            this.orderDetailRepository.save(orderDetail);
-        }
-
-        // Step 2: Delete All cartDetails and Cart
-        for (CartDetail cd : cartDetails) {
-            this.cartDetailRepository.deleteById(cd.getId());
-        }
-
-        this.cartRepository.deleteById(cart.getId());
-
-        // Step 3: Update Session
-        session.setAttribute("sum", 0);
     }
 
+    public void handleDeleteAllProductsFromCart(User user, HttpSession session) {
+        Cart cart = this.cartRepository.findByUser(user);
+        if (cart != null) {
+            List<CartDetail> cartDetails = cart.getCartDetails();
+            if (cartDetails != null) {
+                for (CartDetail cd : cartDetails) {
+                    this.cartDetailRepository.deleteById(cd.getId());
+                }
+
+                this.cartRepository.deleteById(cart.getId());
+            }
+            // step 3 : update session
+            session.setAttribute("sum", 0);
+        }
+    }
 }

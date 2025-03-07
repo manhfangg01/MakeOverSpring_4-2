@@ -19,6 +19,7 @@ import vn.hoidanit.laptopshop.domain.Product;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.service.ProductService;
 import vn.hoidanit.laptopshop.service.UserService;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class ItemController {
@@ -49,6 +50,14 @@ public class ItemController {
         this.productService.handleAddProductToCart(email, productId, session);
 
         return "redirect:/";
+    }
+
+    @PostMapping("/delete-cart-product/{id}")
+    public String deleteCartDetail(@PathVariable long id, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        long cartDetailId = id;
+        this.productService.handleRemoveCartDetail(cartDetailId, session);
+        return "redirect:/cart";
     }
 
     @GetMapping("/cart")
@@ -121,6 +130,17 @@ public class ItemController {
     @GetMapping("/thanks")
     public String getThanksPage() {
         return "client/cart/thanks";
+    }
+
+    @PostMapping("/deleteAll")
+    public String deleteAll(HttpServletRequest request) {
+        User currentUser = new User();
+        HttpSession session = request.getSession(false);
+        long userId = (long) session.getAttribute("id");
+        currentUser = this.userService.getUserById(userId);
+
+        this.productService.handleDeleteAllProductsFromCart(currentUser, session);
+        return "redirect:/cart";
     }
 
 }

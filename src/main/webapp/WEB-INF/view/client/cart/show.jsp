@@ -87,16 +87,25 @@
                                     <tbody>
                                         
                                         <tr>
-                                             <div class="d-flex align-items-center custom-control">
-                                <label for="checkboxCart"> <p class="checkBoxStatus" style="margin-top: 0;">Chọn tất cả sản phẩm </p></label>
-                                <input type="checkbox" value="true" class="custom-control-input" id="checkboxCart" >
+                                             <div class="d-flex align-items-center custom-control  justify-content-between">
+                                <div>
+                                    <label for="checkboxCart"> <p class="checkBoxStatus" style="margin-top: 0;" id="labelCheckbox" aria-checked="true">Chọn tất cả sản phẩm </p></label>
+                                    <input type="checkbox" value="true" class="custom-control-input" id="checkboxCart" onclick="toggleAll(this)" >
+                                </div>
+                                <form method="post" action="/deleteAll">
+                                     <input type="hidden" name="${_csrf.parameterName}"
+                                                            value="${_csrf.token}" />
+                                    <button  style="text-decoration: underline; color: crimson; display: none; border: none; background: none;" id="deleteAll">
+                                        Xóa tất cả đã chọn
+                                    </button>
+                                </form>
                                
                             </div>
                                         </tr>
                                         <c:forEach var="cartDetail" items="${cartDetails}" varStatus="status">
                                               
                                             <tr>
-                                               <td> <input type="checkbox" value="true" style="font-size: 16px; height: 1.25rem; width: 1.25rem;"></td>
+                                               <td> <input type="checkbox" value="true" style="font-size: 16px; height: 1.25rem; width: 1.25rem;" class="childCheckbox"></td>
                                                 <th scope="row">
                                                     
                                                     <div class="d-flex align-items-center">
