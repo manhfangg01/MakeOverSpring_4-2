@@ -102,9 +102,10 @@
                                
                             </div>
                                         </tr>
+
                                         <c:forEach var="cartDetail" items="${cartDetails}" varStatus="status">
                                               
-                                            <tr>
+                                            <tr class="cart-body">
                                                <td> <input type="checkbox" value="true" style="font-size: 16px; height: 1.25rem; width: 1.25rem;" class="childCheckbox"></td>
                                                 <th scope="row">
                                                     
@@ -252,4 +253,4 @@
                     <script src="/client/js/main.js"></script>
                 </body>
 
-                </html>
+                </html> 

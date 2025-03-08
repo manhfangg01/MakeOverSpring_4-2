@@ -38,42 +38,99 @@
     toggleDeleteButton();
     updateTotalCartPrice();
   });
-
   // Cập nhật số lượng sản phẩm
   $(".quantity button").on("click", function () {
-    var button = $(this);
-    var input = button.closest(".quantity").find("input");
-    var oldValue = parseInt(input.val());
-    var newVal = oldValue;
-    var price = parseFloat(input.data("cart-detail-price")) || 0;
-    var id = input.data("cart-detail-id");
-    var priceElement = $(`p[data-cart-detail-id='${id}']`);
+    let change = 0;
 
+    var button = $(this);
+    var oldValue = button.parent().parent().find("input").val();
     if (button.hasClass("btn-plus")) {
-      newVal++;
-    } else if (oldValue > 1) {
-      newVal--;
+      var newVal = parseFloat(oldValue) + 1;
+      change = 1;
+    } else {
+      if (oldValue > 1) {
+        var newVal = parseFloat(oldValue) - 1;
+        change = -1;
+      } else {
+        newVal = 1;
+      }
+    }
+    const input = button.parent().parent().find("input");
+    input.val(newVal);
+
+    //set form index
+    const index = input.attr("data-cart-detail-index");
+    const el = document.getElementById(`cartDetails${index}.quantity`);
+    $(el).val(newVal);
+
+    //get price
+    const price = input.attr("data-cart-detail-price");
+    const id = input.attr("data-cart-detail-id");
+
+    const priceElement = $(`p[data-cart-detail-id='${id}']`);
+    if (priceElement) {
+      const newPrice = +price * newVal;
+      priceElement.text(formatCurrency(newPrice.toFixed(2)) + " đ");
     }
 
-    input.val(newVal);
-    priceElement.text(formatCurrency(price * newVal) + " đ");
-    updateTotalCartPrice();
-  });
+    //update total cart price
+    const totalPriceElement = $(`p[data-cart-total-price]`);
 
+    if (totalPriceElement && totalPriceElement.length) {
+      const currentTotal = totalPriceElement
+        .first()
+        .attr("data-cart-total-price");
+      let newTotal = +currentTotal;
+      if (change === 0) {
+        newTotal = +currentTotal;
+      } else {
+        newTotal = change * +price + +currentTotal;
+      }
+
+      //reset change
+      change = 0;
+
+      //update
+      totalPriceElement?.each(function (index, element) {
+        //update text
+        $(totalPriceElement[index]).text(
+          formatCurrency(newTotal.toFixed(2)) + " đ"
+        );
+
+        //update data-attribute
+        $(totalPriceElement[index]).attr("data-cart-total-price", newTotal);
+      });
+    }
+  });
   function updateTotalCartPrice() {
-    let total = 0;
-    $(".childCheckbox:checked").each(function () {
-      let row = $(this).closest("tr");
-      let price = parseFloat(row.find("input").data("cart-detail-price")) || 0;
-      let quantity = parseInt(row.find("input").val()) || 0;
-      total += price * quantity;
+    let newTotal = 0;
+    const totalPriceElement = $(`p[data-cart-total-price]`);
+    $(".cart-body").each(function () {
+      const checkbox = $(this).find(".childCheckbox");
+      const price =
+        parseFloat($(this).find(".form-control").data("cart-detail-price")) ||
+        0;
+      const quantity = parseInt($(this).find(".form-control").val()) || 1;
+      if (checkbox.prop("checked")) {
+        newTotal += price * quantity;
+      }
     });
 
-    $("p[data-cart-total-price]").text(formatCurrency(total) + " đ");
+    totalPriceElement?.each(function (index, element) {
+      //update text
+      $(totalPriceElement[index]).text(
+        formatCurrency(newTotal.toFixed(2)) + " đ"
+      );
+
+      //update data-attribute
+      $(totalPriceElement[index]).attr("data-cart-total-price", newTotal);
+    });
   }
 
-  $(".childCheckbox").on("change", updateTotalCartPrice);
-
+  $(".childCheckbox").on("change", function () {
+    updateTotalCartPrice();
+  }); // Khi 1 checkBox bị thay đổi thì nó sẽ gọi hàm updataTotalPrice
+  $("#checkboxCart").on("change", updateTotalCartPrice);
   function formatCurrency(value) {
     return new Intl.NumberFormat("vi-VN").format(value);
   }
@@ -92,4 +149,6 @@
   function toggleDeleteButton() {
     $("#deleteAll").toggle($(".childCheckbox:checked").length > 0);
   }
+
+  // Trigger toast
 })(jQuery);
