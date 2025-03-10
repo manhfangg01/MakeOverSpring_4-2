@@ -47,7 +47,7 @@ public class ItemController {
         long productId = id;
         String email = (String) session.getAttribute("email");
 
-        this.productService.handleAddProductToCart(email, productId, session);
+        this.productService.handleAddProductToCart(email, productId, session, 1);
 
         return "redirect:/";
     }
@@ -141,6 +141,20 @@ public class ItemController {
 
         this.productService.handleDeleteAllProductsFromCart(currentUser, session);
         return "redirect:/cart";
+    }
+
+    @PostMapping("/add-product-from-view-detail")
+    public String handleAddProductFromViewDetail(
+            @RequestParam("id") long id, // Nếu lấy dữ liệu bằng name thì bên Model nhận dữ liệu bằng RequestParam
+                                         // Nếu lấy dữ liệu bằng modelAttribute(form:form) -> Lấy dữ liệu bằng
+                                         // @ModelAttribute("name")
+            @RequestParam("quantity") long quantity,
+            HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+
+        String email = (String) session.getAttribute("email");
+        this.productService.handleAddProductToCart(email, id, session, quantity);
+        return "redirect:/product/" + id;
     }
 
 }

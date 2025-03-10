@@ -3,6 +3,9 @@ package vn.hoidanit.laptopshop.controller.admin;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,9 +35,32 @@ public class ProductController {
     }
 
     @GetMapping("/admin/product")
-    public String getProduct(Model model) {
-        List<Product> prs = this.productService.fetchProducts();
-        model.addAttribute("products", prs);
+    public String getProduct(Model model, @RequestParam(value = "page", defaultValue = "1") int page) { // Phải cài
+                                                                                                        // default value
+                                                                                                        // bởi vì khi
+                                                                                                        // render trang
+                                                                                                        // admin/product
+                                                                                                        // thì sẽ không
+                                                                                                        // có tham số
+                                                                                                        // query String
+                                                                                                        // => Khi đó sẽ
+                                                                                                        // cài đặt mặc
+                                                                                                        // định vào
+                                                                                                        // trang số 1
+        // Database: Needing OFFSET and LIMIT
+        // Backend HardCode: page: 1 . limit=10
+        // VD: Dưới db có 100 rows -> .count=100 => Chia cho (Hardcode)LIMIT =10 -> 10
+        // lần lấy => có 10 trang được chia
+        // OFFSET được tính bằng công thức [ (currentPage-1) * limit ]
+
+        Pageable pageable = PageRequest.of(page - 1, 2);
+
+        Page<Product> prs = this.productService.fetchProducts(pageable); // Do đây là kiểu page nên nếu truyền lên view
+                                                                         // sẽ không thể render được
+        List<Product> listProducts = prs.getContent();
+        model.addAttribute("products", listProducts);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", prs.getTotalPages());
         return "admin/product/show";
     }
 

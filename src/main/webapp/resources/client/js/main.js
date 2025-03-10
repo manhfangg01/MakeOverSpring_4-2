@@ -105,16 +105,31 @@
   function updateTotalCartPrice() {
     let newTotal = 0;
     const totalPriceElement = $(`p[data-cart-total-price]`);
-    $(".cart-body").each(function () {
-      const checkbox = $(this).find(".childCheckbox");
-      const price =
-        parseFloat($(this).find(".form-control").data("cart-detail-price")) ||
-        0;
-      const quantity = parseInt($(this).find(".form-control").val()) || 1;
-      if (checkbox.prop("checked")) {
-        newTotal += price * quantity;
+    if ($(".cart-body").length) {
+      if (totalPriceElement && totalPriceElement.length) {
+        $(".cart-body").each(function () {
+          const checkbox = $(this).find(".childCheckbox");
+          const price =
+            parseFloat(
+              $(this).find(".form-control").data("cart-detail-price")
+            ) || 0;
+          const quantity = parseInt($(this).find(".form-control").val()) || 1;
+          if (checkbox.prop("checked")) {
+            newTotal += price * quantity;
+          }
+        });
       }
-    });
+    } else {
+      $("tr").each(function () {
+        const priceElement = $(this).find(`p[data-cart-detail-id]`);
+        const price = priceElement.text().trim().replace(/\D/g, "");
+        newTotal += +price;
+      });
+    }
+    // parseFloat: có thể chuyển đổi không đúng trong một số trường hợp như:
+    // 1. Có kí tự khác ngoài số VD: 100.000.000 đ -> "đ" sẽ làm cho parseFloat không chuyển đổi được
+    // 2. Có kí tự "space"(khoảng trắng)
+    // ==> Để chuyển đổi đúng thì cần phải lọc bỏ hết các kí tự tạp trên
 
     totalPriceElement?.each(function (index, element) {
       //update text

@@ -1,7 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %> <%@ taglib prefix="c"
-uri="http://java.sun.com/jsp/jstl/core" %> <%@taglib
-uri="http://www.springframework.org/tags/form" prefix="form" %>
-
+uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -31,7 +29,7 @@ uri="http://www.springframework.org/tags/form" prefix="form" %>
             <h1 class="mt-4">Manage Users</h1>
             <ol class="breadcrumb mb-4">
               <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-              <li class="breadcrumb-item active">User</li>
+              <li class="breadcrumb-item active">Users</li>
             </ol>
             <div class="mt-5">
               <div class="row">
@@ -55,7 +53,7 @@ uri="http://www.springframework.org/tags/form" prefix="form" %>
                       </tr>
                     </thead>
                     <tbody>
-                      <c:forEach var="user" items="${users}">
+                      <c:forEach var="user" items="${users1}">
                         <tr>
                           <th>${user.id}</th>
                           <td>${user.email}</td>
@@ -94,6 +92,6 @@ uri="http://www.springframework.org/tags/form" prefix="form" %>
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       crossorigin="anonymous"
     ></script>
-    <script src="js/scripts.js"></script>
+    <script src="/js/scripts.js"></script>
   </body>
 </html>
