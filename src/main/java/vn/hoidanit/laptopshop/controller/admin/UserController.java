@@ -2,6 +2,9 @@ package vn.hoidanit.laptopshop.controller.admin;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,10 +39,15 @@ public class UserController {
     }
 
     @RequestMapping("/admin/user")
-    public String getUserPage(Model model) {
-        List<User> users = this.userService.getAllUsers();
-        model.addAttribute("users1", users);
+    public String getUserPage(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
+        Pageable pageable = PageRequest.of(page - 1, 5);
+        Page<User> pageUsers = this.userService.fetchAllUsers(pageable);
+        List<User> listUsers = pageUsers.getContent();
+        model.addAttribute("users1", listUsers);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", pageUsers.getTotalPages());
         return "admin/user/show";
+
     }
 
     @RequestMapping("/admin/user/{id}")

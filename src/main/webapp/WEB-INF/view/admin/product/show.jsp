@@ -80,6 +80,8 @@ uri="http://www.springframework.org/tags/form" prefix="form" %>
                       </c:forEach>
                     </tbody>
                   </table>
+
+                  <!-- Pagination - Start-->
                   <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
                       <!-- Thêm justify-content-center để căn giữa -->
@@ -119,6 +121,7 @@ uri="http://www.springframework.org/tags/form" prefix="form" %>
                       </li>
                     </ul>
                   </nav>
+                  <!-- Pagination - End-->
                 </div>
               </div>
             </div>

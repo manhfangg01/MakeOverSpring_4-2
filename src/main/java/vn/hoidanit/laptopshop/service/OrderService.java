@@ -3,6 +3,8 @@ package vn.hoidanit.laptopshop.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import vn.hoidanit.laptopshop.domain.Order;
@@ -23,7 +25,11 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public List<Order> fetchAllOrders() {
+    public Page<Order> fetchAllOrders(Pageable pageable) {
+        return this.orderRepository.findAll(pageable);
+    }
+
+    public List<Order> getAllUser() {
         return this.orderRepository.findAll();
     }
 

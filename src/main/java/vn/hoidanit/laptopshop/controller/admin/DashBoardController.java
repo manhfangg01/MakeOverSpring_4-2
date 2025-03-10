@@ -24,7 +24,7 @@ public class DashBoardController {
     public String getDashboard(Model model) {
         model.addAttribute("countUser", this.userService.getAllUsers().size());
         model.addAttribute("countProduct", this.productService.getAllProducts().size());
-        model.addAttribute("countOrder", this.orderService.fetchAllOrders().size());
+        model.addAttribute("countOrder", this.orderService.getAllUser().size());
         return "admin/dashboard/show";
     }
 
