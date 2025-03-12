@@ -35,24 +35,36 @@ public class ProductController {
     }
 
     @GetMapping("/admin/product")
-    public String getProduct(Model model, @RequestParam(value = "page", defaultValue = "1") int page) { // Phải cài
-                                                                                                        // default value
-                                                                                                        // bởi vì khi
-                                                                                                        // render trang
-                                                                                                        // admin/product
-                                                                                                        // thì sẽ không
-                                                                                                        // có tham số
-                                                                                                        // query String
-                                                                                                        // => Khi đó sẽ
-                                                                                                        // cài đặt mặc
-                                                                                                        // định vào
-                                                                                                        // trang số 1
+    public String getProduct(Model model, @RequestParam("page") Optional<String> pageOptional) { // Phải cài
+                                                                                                 // default value
+                                                                                                 // bởi vì khi
+                                                                                                 // render trang
+                                                                                                 // admin/product
+                                                                                                 // thì sẽ không
+                                                                                                 // có tham số
+                                                                                                 // query String
+                                                                                                 // => Khi đó sẽ
+                                                                                                 // cài đặt mặc
+                                                                                                 // định vào
+                                                                                                 // trang số 1
         // Database: Needing OFFSET and LIMIT
         // Backend HardCode: page: 1 . limit=10
         // VD: Dưới db có 100 rows -> .count=100 => Chia cho (Hardcode)LIMIT =10 -> 10
         // lần lấy => có 10 trang được chia
         // OFFSET được tính bằng công thức [ (currentPage-1) * limit ]
 
+        int page = 1;
+        try {
+            if (pageOptional.isPresent()) {
+                // convert from String to int
+                page = Integer.parseInt(pageOptional.get());
+            } else {
+                // page = 1
+            }
+        } catch (Exception e) {
+            // page = 1
+            // TODO: handle exception
+        }
         Pageable pageable = PageRequest.of(page - 1, 2);
 
         Page<Product> prs = this.productService.fetchProducts(pageable); // Do đây là kiểu page nên nếu truyền lên view
@@ -148,4 +160,5 @@ public class ProductController {
         model.addAttribute("id", id);
         return "admin/product/detail";
     }
+
 }

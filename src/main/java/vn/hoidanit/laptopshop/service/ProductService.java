@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties.Http;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import vn.hoidanit.laptopshop.domain.Order;
@@ -15,12 +16,14 @@ import vn.hoidanit.laptopshop.domain.Cart;
 import vn.hoidanit.laptopshop.domain.CartDetail;
 import vn.hoidanit.laptopshop.domain.OrderDetail;
 import vn.hoidanit.laptopshop.domain.Product;
+import vn.hoidanit.laptopshop.domain.Product_;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.repository.CartDetailRepository;
 import vn.hoidanit.laptopshop.repository.CartRepository;
 import vn.hoidanit.laptopshop.repository.OrderDetailRepository;
 import vn.hoidanit.laptopshop.repository.OrderRepository;
 import vn.hoidanit.laptopshop.repository.ProductRepository;
+import vn.hoidanit.laptopshop.service.specification.ProductSpecification;
 
 @Service
 public class ProductService {
@@ -52,7 +55,13 @@ public class ProductService {
         return this.productRepository.save(pr);
     }
 
-    public Page<Product> fetchProducts(Pageable pageable) {
+    public Page<Product> fetchProductsWithSpecification(
+            String name, Pageable pageable) {
+        return this.productRepository.findAll(ProductSpecification.nameLike(name), pageable);
+    }
+
+    public Page<Product> fetchProducts(
+            Pageable pageable) {
         return this.productRepository.findAll(pageable);
     }
 
