@@ -1,6 +1,7 @@
 package vn.hoidanit.laptopshop.controller.client;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,49 +23,14 @@ import vn.hoidanit.laptopshop.domain.CartDetail;
 import vn.hoidanit.laptopshop.domain.Product;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.service.ProductService;
-import vn.hoidanit.laptopshop.service.UserService;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class ItemController {
-    private final UserService userService;
 
     private final ProductService productService;
 
-    public ItemController(ProductService productService, UserService userService) {
+    public ItemController(ProductService productService) {
         this.productService = productService;
-        this.userService = userService;
-    }
-
-    @GetMapping("/products")
-    public String getProductPage(Model model, @RequestParam("page") Optional<String> pageOptional,
-            @RequestParam("name") Optional<String> nameOptional,
-            @RequestParam("min-price") Optional<Long> minPriceOptional) {
-        int page = 1;
-        try {
-            if (pageOptional.isPresent()) {
-                // convert from String to int
-                page = Integer.parseInt(pageOptional.get());
-            } else {
-                // page = 1
-            }
-        } catch (Exception e) {
-            // page = 1
-            // TODO: handle exception
-        }
-
-        Long minPrice = minPriceOptional.isPresent() ? minPriceOptional.get() : 100000000;
-
-        String name = nameOptional.isPresent() ? nameOptional.get() : "";
-
-        Pageable pageable = PageRequest.of(page - 1, 6);
-        Page<Product> prs = this.productService.fetchProductsWithSpecification(name, pageable);
-        List<Product> products = prs.getContent();
-
-        model.addAttribute("products", products);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", prs.getTotalPages());
-        return "client/product/show";
     }
 
     @GetMapping("/product/{id}")
@@ -87,14 +53,6 @@ public class ItemController {
         return "redirect:/";
     }
 
-    @PostMapping("/delete-cart-product/{id}")
-    public String deleteCartDetail(@PathVariable long id, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        long cartDetailId = id;
-        this.productService.handleRemoveCartDetail(cartDetailId, session);
-        return "redirect:/cart";
-    }
-
     @GetMapping("/cart")
     public String getCartPage(Model model, HttpServletRequest request) {
         User currentUser = new User();// null
@@ -111,11 +69,20 @@ public class ItemController {
             totalPrice += cd.getPrice() * cd.getQuantity();
         }
 
-        model.addAttribute("cart", cart);
         model.addAttribute("cartDetails", cartDetails);
         model.addAttribute("totalPrice", totalPrice);
 
+        model.addAttribute("cart", cart);
+
         return "client/cart/show";
+    }
+
+    @PostMapping("/delete-cart-product/{id}")
+    public String deleteCartDetail(@PathVariable long id, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        long cartDetailId = id;
+        this.productService.handleRemoveCartDetail(cartDetailId, session);
+        return "redirect:/cart";
     }
 
     @GetMapping("/checkout")
@@ -153,36 +120,25 @@ public class ItemController {
             @RequestParam("receiverName") String receiverName,
             @RequestParam("receiverAddress") String receiverAddress,
             @RequestParam("receiverPhone") String receiverPhone) {
-        User currentUser = new User();
+        User currentUser = new User();// null
         HttpSession session = request.getSession(false);
-        long userId = (long) session.getAttribute("id");
-        currentUser = this.userService.getUserById(userId);
+        long id = (long) session.getAttribute("id");
+        currentUser.setId(id);
 
         this.productService.handlePlaceOrder(currentUser, session, receiverName, receiverAddress, receiverPhone);
+
         return "redirect:/thanks";
     }
 
     @GetMapping("/thanks")
-    public String getThanksPage() {
+    public String getThankYouPage(Model model) {
+
         return "client/cart/thanks";
-    }
-
-    @PostMapping("/deleteAll")
-    public String deleteAll(HttpServletRequest request) {
-        User currentUser = new User();
-        HttpSession session = request.getSession(false);
-        long userId = (long) session.getAttribute("id");
-        currentUser = this.userService.getUserById(userId);
-
-        this.productService.handleDeleteAllProductsFromCart(currentUser, session);
-        return "redirect:/cart";
     }
 
     @PostMapping("/add-product-from-view-detail")
     public String handleAddProductFromViewDetail(
-            @RequestParam("id") long id, // Nếu lấy dữ liệu bằng name thì bên Model nhận dữ liệu bằng RequestParam
-                                         // Nếu lấy dữ liệu bằng modelAttribute(form:form) -> Lấy dữ liệu bằng
-                                         // @ModelAttribute("name")
+            @RequestParam("id") long id,
             @RequestParam("quantity") long quantity,
             HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -190,6 +146,73 @@ public class ItemController {
         String email = (String) session.getAttribute("email");
         this.productService.handleAddProductToCart(email, id, session, quantity);
         return "redirect:/product/" + id;
+    }
+
+    @GetMapping("/products")
+    public String getProductPage(Model model,
+            @RequestParam("page") Optional<String> pageOptional,
+            @RequestParam("name") Optional<String> nameOptional,
+            @RequestParam("factory") Optional<String> factoryOptional,
+            @RequestParam("target") Optional<String> targetOptional,
+            @RequestParam("price") Optional<String> priceOptional,
+            @RequestParam("sort") Optional<String> sortOptional
+
+    ) {
+        int page = 1;
+        try {
+            if (pageOptional.isPresent()) {
+                // convert from String to int
+                page = Integer.parseInt(pageOptional.get());
+            } else {
+                // page = 1
+            }
+        } catch (Exception e) {
+            // page = 1
+            // TODO: handle exception
+        }
+
+        Pageable pageable = PageRequest.of(page - 1, 60);
+
+        String name = nameOptional.isPresent() ? nameOptional.get() : "";
+        Page<Product> prs = this.productService.fetchProductsWithSpec(pageable,
+                name);
+
+        // case 1
+        // double min = minOptional.isPresent() ? Double.parseDouble(minOptional.get())
+        // : 0;
+        // Page<Product> prs = this.productService.fetchProductsWithSpec(pageable, min);
+
+        // case 2
+        // double max = maxOptional.isPresent() ? Double.parseDouble(maxOptional.get())
+        // : 0;
+        // Page<Product> prs = this.productService.fetchProductsWithSpec(pageable, max);
+
+        // case 3
+        // String factory = factoryOptional.isPresent() ? factoryOptional.get() : "";
+        // Page<Product> prs = this.productService.fetchProductsWithSpec(pageable,
+        // factory);
+
+        // case 4
+        // List<String> factory = Arrays.asList(factoryOptional.get().split(","));
+        // Page<Product> prs = this.productService.fetchProductsWithSpec(pageable,
+        // factory);
+
+        // case 5
+        // String price = priceOptional.isPresent() ? priceOptional.get() : "";
+        // Page<Product> prs = this.productService.fetchProductsWithSpec(pageable,
+        // price);
+
+        // case 6
+        // List<String> price = Arrays.asList(priceOptional.get().split(","));
+        // Page<Product> prs = this.productService.fetchProductsWithSpec(pageable,
+        // price);
+
+        List<Product> products = prs.getContent();
+
+        model.addAttribute("products", products);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", prs.getTotalPages());
+        return "client/product/show";
     }
 
 }

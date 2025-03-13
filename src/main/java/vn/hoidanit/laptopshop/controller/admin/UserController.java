@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,11 +37,17 @@ public class UserController {
 
     @RequestMapping("/")
     public String getHomePage(Model model) {
+        List<User> arrUsers = this.userService.getAllUsersByEmail("1@gmail.com");
+        System.out.println(arrUsers);
+
+        model.addAttribute("eric", "test");
+        model.addAttribute("hoidanit", "from controller with model");
         return "hello";
     }
 
     @RequestMapping("/admin/user")
-    public String getUserPage(Model model, @RequestParam("page") Optional<String> pageOptional) {
+    public String getUserPage(Model model,
+            @RequestParam("page") Optional<String> pageOptional) {
         int page = 1;
         try {
             if (pageOptional.isPresent()) {
@@ -53,14 +60,15 @@ public class UserController {
             // page = 1
             // TODO: handle exception
         }
-        Pageable pageable = PageRequest.of(page - 1, 5);
-        Page<User> pageUsers = this.userService.fetchAllUsers(pageable);
-        List<User> listUsers = pageUsers.getContent();
-        model.addAttribute("users1", listUsers);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", pageUsers.getTotalPages());
-        return "admin/user/show";
 
+        Pageable pageable = PageRequest.of(page - 1, 1);
+        Page<User> usersPage = this.userService.getAllUsers(pageable);
+        List<User> users = usersPage.getContent();
+        model.addAttribute("users1", users);
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", usersPage.getTotalPages());
+        return "admin/user/show";
     }
 
     @RequestMapping("/admin/user/{id}")

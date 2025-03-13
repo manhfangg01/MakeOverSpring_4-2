@@ -4,28 +4,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import vn.hoidanit.laptopshop.service.OrderService;
-import vn.hoidanit.laptopshop.service.ProductService;
 import vn.hoidanit.laptopshop.service.UserService;
 
 @Controller
-public class DashBoardController {
-    private final UserService userService;
-    private final ProductService productService;
-    private final OrderService orderService;
+public class DashboardController {
 
-    public DashBoardController(UserService userService, ProductService productService, OrderService orderService) {
+    private final UserService userService;
+
+    public DashboardController(UserService userService) {
         this.userService = userService;
-        this.productService = productService;
-        this.orderService = orderService;
     }
 
     @GetMapping("/admin")
     public String getDashboard(Model model) {
-        model.addAttribute("countUser", this.userService.getAllUsers().size());
-        model.addAttribute("countProduct", this.productService.getAllProducts().size());
-        model.addAttribute("countOrder", this.orderService.getAllUser().size());
+        model.addAttribute("countUsers", this.userService.countUsers());
+        model.addAttribute("countProducts", this.userService.countProducts());
+        model.addAttribute("countOrders", this.userService.countOrders());
         return "admin/dashboard/show";
     }
-
 }
