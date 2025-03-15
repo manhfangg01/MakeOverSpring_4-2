@@ -94,7 +94,8 @@ public class SecurityConfiguration {
                         // Khi lưu sẽ là ROLE_ADMIN hoặc ROLE_USER
 
                         .requestMatchers("/register", "/", "/login", "/client/**", "/css/**", "/js/**", "/images/**",
-                                "/product/**", "/add-product-to-cart/**")
+                                "/product/**", "/add-product-to-cart/**",
+                                "/products/**")
                         .permitAll() // Đây
                         // chính
                         // là
@@ -126,7 +127,8 @@ public class SecurityConfiguration {
                                                           // *When ...PreventsLogin(true) -> the one who login first can
                                                           // use and the second login one was prevented to login
                                                           // *When ...PreventsLogin(false) -> the one who login first is
-                                                          // force to logout and let the second login one go to session
+                                                          // force to logout and let the second login one go to
+                .csrf(token -> token.disable()) // Disabling Token(Unrecommended)
 
                 .logout(logout -> logout.deleteCookies("JSESSIONID").invalidateHttpSession(true))
 

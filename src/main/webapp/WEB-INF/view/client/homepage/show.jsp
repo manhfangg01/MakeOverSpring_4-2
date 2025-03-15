@@ -31,6 +31,13 @@
                 <!-- Template Stylesheet -->
                 <link href="/client/css/style.css" rel="stylesheet">
 
+                <meta name="_csrf" content="${_csrf.token}" />
+                <!-- default header name is X-CSRF-TOKEN -->
+                <meta name="_csrf_header" content="${_csrf.headerName}" />
+
+                <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css"
+                    rel="stylesheet">
+
             </head>
 
             <body>
@@ -52,26 +59,16 @@
 
                 <!-- Fruits Shop Start-->
                 <div class="container-fluid fruite py-5">
-                    <div class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true" id="addToast">
-  <div class="d-flex">
-    <i class="fa-regular fa-circle-check"></i>
-    <div class="toast-body">
-     Thêm vào giỏ hàng thành công
-    </div>
-    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-  </div>
-</div>
                     <div class="container py-5">
                         <div class="tab-class text-center">
                             <div class="row g-4">
-                                <div class="col-lg-5 text-start">
+                                <div class="col-lg-4 text-start">
                                     <h1>Sản phẩm nổi bật</h1>
                                 </div>
-                                <div class="col-lg-7 text-end">
+                                <div class="col-lg-8 text-end">
                                     <ul class="nav nav-pills d-inline-flex text-center mb-5">
                                         <li class="nav-item">
-                                            <a class="d-flex m-2 py-2 bg-light rounded-pill active"
-                                                 href="/products">
+                                            <a class="d-flex m-2 py-2 bg-light rounded-pill active" href="/products">
                                                 <span class="text-dark" style="width: 130px;">All Products</span>
                                             </a>
                                         </li>
@@ -102,24 +99,25 @@
                                                                 </h4>
                                                                 <p style="font-size: 13px;">${product.shortDesc}</p>
                                                                 <div
-                                                                    class="d-flex  flex-lg-wrap justify-content-center  flex-column">
+                                                                    class="d-flex  flex-lg-wrap justify-content-center flex-column">
                                                                     <p style="font-size: 15px; text-align: center; width: 100%;"
                                                                         class="text-dark  fw-bold mb-3">
                                                                         <fmt:formatNumber type="number"
                                                                             value="${product.price}" /> đ
                                                                     </p>
-                                                                    <form action="/add-product-to-cart/${product.id}"
+                                                                    <!-- <form action="/add-product-to-cart/${product.id}"
                                                                         method="post">
                                                                         <input type="hidden"
                                                                             name="${_csrf.parameterName}"
-                                                                            value="${_csrf.token}" />
+                                                                            value="${_csrf.token}" /> -->
 
-                                                                        <button
-                                                                            class="mx-auto btn border border-secondary rounded-pill px-3 text-primary triggerToast"><i
-                                                                                class="fa fa-shopping-bag me-2 text-primary"></i>
-                                                                            Add to cart
-                                                                        </button>
-                                                                    </form>
+                                                                    <button data-product-id="${product.id}"
+                                                                        class="btnAddToCartHomepage mx-auto btn border border-secondary rounded-pill px-3 text-primary">
+                                                                        <i
+                                                                            class="fa fa-shopping-bag me-2 text-primary"></i>
+                                                                        Add to cart
+                                                                    </button>
+                                                                    <!-- </form> -->
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -155,6 +153,8 @@
 
                 <!-- Template Javascript -->
                 <script src="/client/js/main.js"></script>
+                <script
+                    src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
             </body>
 
             </html>

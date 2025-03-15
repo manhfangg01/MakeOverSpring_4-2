@@ -92,7 +92,7 @@ public class ProductService {
             // Set the appropriate min and max based on the price range string
             switch (p) {
                 case "duoi-10-trieu":
-                    min = 0;
+                    min = 1; // Min phải bằng 1 chứ không được bằng 0 nếu không sẽ rơi vào cái if bên dưới
                     max = 10000000;
                     break;
                 case "10-15-trieu":

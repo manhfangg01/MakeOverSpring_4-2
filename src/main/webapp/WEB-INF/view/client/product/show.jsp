@@ -35,6 +35,13 @@
 
                     <!-- Template Stylesheet -->
                     <link href="/client/css/style.css" rel="stylesheet">
+                    <style>
+                        .page-link.disabled {
+                            color: var(--bs-pagination-disabled-color);
+                            pointer-events: none;
+                            background-color: var(--bs-pagination-disabled-bg);
+                        }
+                    </style>
                 </head>
 
                 <body>
@@ -249,11 +256,10 @@
                                                 <div class="pagination d-flex justify-content-center mt-5">
                                                     <li class="page-item">
                                                         <a class="${1 eq currentPage ? 'disabled page-link' : 'page-link'}"
-                                                            href="/products?page=${currentPage - 1}${queryString}"      
+                                                            href="/products?page=${currentPage - 1}${queryString}"
                                                             aria-label="Previous">
                                                             <span aria-hidden="true">&laquo;</span>
                                                         </a>
-                                                        <!-- Thêm QueryString vào mỗi nút phân trang để khi phân trang không bị mất đi thuộc tính của filter-->
                                                     </li>
                                                     <c:forEach begin="0" end="${totalPages - 1}" varStatus="loop">
                                                         <li class="page-item">

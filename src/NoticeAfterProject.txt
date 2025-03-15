@@ -1,0 +1,40 @@
+1. Style Coding in Spring Project
+    - DI-Dependency-Injection
+        +C1: Field Injection with @Autowired annotation
+            * Less code but unsafe and more complicated to test
+        +C2: Constructor Injection
+            * more safe and easier to test but more code
+
+    - Using interface for coding organization: Depends on company, each of them has a different style of coding and maintaining
+
+    -Relationship between model
+        -Optimize with "Fetch mode: EAGER/LAZY"
+        - When creating Relationship between table we need to specific fetch type
+
+
+2. Plan for self-coding Spring Project
+    B1: Initialize a Spring project on "start.spring.io"
+    B2: add Dependency (On initialization or in implementing) Thêm lúc bắt đầu hoặc thêm lúc sau cái nào cũng được -> pom.xml
+
+3. implementing Project
+    - Configure Spring Security
+        + configure CRUD to manage User Accounts and hashing password
+    - Configure Session, Login, Signin, Logout
+        + Authentication, Authorization, adding csrf token
+    - Manage and create more features
+        +
+
+4. Result
+    - Google Searching Skills
+    - Coding and Thinking, Problem-Solving
+5. What's next
+    - Date and API
+    - Using API
+    - Optimizing more
+    - Missed Components in Spring roadmap
+    - Plan for next steps
+        + Practice at least 01 project by self (form a -> z). No need to remember code (if forgot -> Searching Google). Understanding What are you doing 
+        + Gain knowledge of FrontEnd Framework (Don't learn jquery): Angular
+        + Dig in API and Restful API with Spring (RestfulAPI Course of Eric) ( In Jhipster )
+        + Keep learning and learning about other model: Spring Cloud / Spring Microservice
+
