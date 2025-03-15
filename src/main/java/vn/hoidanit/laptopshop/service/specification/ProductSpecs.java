@@ -45,4 +45,9 @@ public class ProductSpecs {
                 root.get(Product_.PRICE), min, max);
     }
 
+    // Case Target
+    public static Specification<Product> matchMultipleTarget(List<String> targets) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.in(root.get(Product_.TARGET)).value(targets);
+    }
+
 }

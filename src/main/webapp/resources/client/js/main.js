@@ -1,5 +1,5 @@
 (function ($) {
-  ("use strict");
+  "use strict";
 
   // Spinner
   var spinner = function () {
@@ -9,7 +9,103 @@
       }
     }, 1);
   };
-  spinner();
+  spinner(0);
+
+  // Fixed Navbar
+  $(window).scroll(function () {
+    if ($(window).width() < 992) {
+      if ($(this).scrollTop() > 55) {
+        $(".fixed-top").addClass("shadow");
+      } else {
+        $(".fixed-top").removeClass("shadow");
+      }
+    } else {
+      if ($(this).scrollTop() > 55) {
+        $(".fixed-top").addClass("shadow").css("top", 0);
+      } else {
+        $(".fixed-top").removeClass("shadow").css("top", 0);
+      }
+    }
+  });
+
+  // Back to top button
+  $(window).scroll(function () {
+    if ($(this).scrollTop() > 300) {
+      $(".back-to-top").fadeIn("slow");
+    } else {
+      $(".back-to-top").fadeOut("slow");
+    }
+  });
+  $(".back-to-top").click(function () {
+    $("html, body").animate({ scrollTop: 0 }, 1500, "easeInOutExpo");
+    return false;
+  });
+
+  // Testimonial carousel
+  $(".testimonial-carousel").owlCarousel({
+    autoplay: true,
+    smartSpeed: 2000,
+    center: false,
+    dots: true,
+    loop: true,
+    margin: 25,
+    nav: true,
+    navText: [
+      '<i class="bi bi-arrow-left"></i>',
+      '<i class="bi bi-arrow-right"></i>',
+    ],
+    responsiveClass: true,
+    responsive: {
+      0: {
+        items: 1,
+      },
+      576: {
+        items: 1,
+      },
+      768: {
+        items: 1,
+      },
+      992: {
+        items: 2,
+      },
+      1200: {
+        items: 2,
+      },
+    },
+  });
+
+  // vegetable carousel
+  $(".vegetable-carousel").owlCarousel({
+    autoplay: true,
+    smartSpeed: 1500,
+    center: false,
+    dots: true,
+    loop: true,
+    margin: 25,
+    nav: true,
+    navText: [
+      '<i class="bi bi-arrow-left"></i>',
+      '<i class="bi bi-arrow-right"></i>',
+    ],
+    responsiveClass: true,
+    responsive: {
+      0: {
+        items: 1,
+      },
+      576: {
+        items: 1,
+      },
+      768: {
+        items: 2,
+      },
+      992: {
+        items: 3,
+      },
+      1200: {
+        items: 4,
+      },
+    },
+  });
 
   // Modal Video
   $(document).ready(function () {
@@ -30,7 +126,7 @@
       $("#video").attr("src", $videoSrc);
     });
 
-    //add active class to header      // Quan trọng
+    //add active class to header
     const navElement = $("#navbarCollapse");
     const currentUrl = window.location.pathname;
     navElement.find("a.nav-link").each(function () {
@@ -45,34 +141,21 @@
     });
   });
 
-  // Fixed Navbar
-  $(window).scroll(function () {
-    if ($(window).width() < 992) {
-      $(".fixed-top").toggleClass("shadow", $(this).scrollTop() > 55);
-    } else {
-      $(".fixed-top")
-        .toggleClass("shadow", $(this).scrollTop() > 55)
-        .css("top", 0);
-    }
-  });
-
-  // Back to top button
-  $(window).scroll(function () {
-    $(".back-to-top").toggle($(this).scrollTop() > 300);
-  });
-  $(".back-to-top").click(function () {
-    $("html, body").animate({ scrollTop: 0 }, 1500, "easeInOutExpo");
-    return false;
-  });
-
-  $(document).ready(function () {
-    $(".childCheckbox").prop("checked", true);
-    $("#checkboxCart").prop("checked", true);
-    $("#labelCheckbox").text("Bỏ chọn tất cả");
-    toggleDeleteButton();
-    updateTotalCartPrice();
-  });
-  // Cập nhật số lượng sản phẩm
+  // Product Quantity
+  // $('.quantity button').on('click', function () {
+  //     var button = $(this);
+  //     var oldValue = button.parent().parent().find('input').val();
+  //     if (button.hasClass('btn-plus')) {
+  //         var newVal = parseFloat(oldValue) + 1;
+  //     } else {
+  //         if (oldValue > 0) {
+  //             var newVal = parseFloat(oldValue) - 1;
+  //         } else {
+  //             newVal = 0;
+  //         }
+  //     }
+  //     button.parent().parent().find('input').val(newVal);
+  // });
   $(".quantity button").on("click", function () {
     let change = 0;
 
@@ -136,68 +219,117 @@
       });
     }
   });
-  function updateTotalCartPrice() {
-    let newTotal = 0;
-    const totalPriceElement = $(`p[data-cart-total-price]`);
-    if ($(".cart-body").length) {
-      if (totalPriceElement && totalPriceElement.length) {
-        $(".cart-body").each(function () {
-          const checkbox = $(this).find(".childCheckbox");
-          const price =
-            parseFloat(
-              $(this).find(".form-control").data("cart-detail-price")
-            ) || 0;
-          const quantity = parseInt($(this).find(".form-control").val()) || 1;
-          if (checkbox.prop("checked")) {
-            newTotal += price * quantity;
-          }
-        });
-      }
-    } else {
-      $("tr").each(function () {
-        const priceElement = $(this).find(`p[data-cart-detail-id]`);
-        const price = priceElement.text().trim().replace(/\D/g, "");
-        newTotal += +price;
-      });
+
+  function formatCurrency(value) {
+    // Use the 'vi-VN' locale to format the number according to Vietnamese currency format
+    // and 'VND' as the currency type for Vietnamese đồng
+    const formatter = new Intl.NumberFormat("vi-VN", {
+      style: "decimal",
+      minimumFractionDigits: 0, // No decimal part for whole numbers
+    });
+
+    let formatted = formatter.format(value);
+    // Replace dots with commas for thousands separator
+    formatted = formatted.replace(/\./g, ",");
+    return formatted;
+  }
+
+  //handle filter products
+  $("#btnFilter").click(function (event) {
+    event.preventDefault();
+
+    let factoryArr = [];
+    let targetArr = [];
+    let priceArr = [];
+    //factory filter
+    $("#factoryFilter .form-check-input:checked").each(function () {
+      factoryArr.push($(this).val());
+    });
+
+    //target filter
+    $("#targetFilter .form-check-input:checked").each(function () {
+      targetArr.push($(this).val());
+    });
+
+    //price filter
+    $("#priceFilter .form-check-input:checked").each(function () {
+      priceArr.push($(this).val());
+    });
+
+    //sort order
+    let sortValue = $('input[name="radio-sort"]:checked').val();
+
+    const currentUrl = new URL(window.location.href);
+    const searchParams = currentUrl.searchParams;
+
+    // Add or update query parameters
+    searchParams.set("page", "1");
+    searchParams.set("sort", sortValue);
+
+    //reset
+    searchParams.delete("factory");
+    searchParams.delete("target");
+    searchParams.delete("price");
+
+    if (factoryArr.length > 0) {
+      searchParams.set("factory", factoryArr.join(","));
     }
-    // parseFloat: có thể chuyển đổi không đúng trong một số trường hợp như:
-    // 1. Có kí tự khác ngoài số VD: 100.000.000 đ -> "đ" sẽ làm cho parseFloat không chuyển đổi được
-    // 2. Có kí tự "space"(khoảng trắng)
-    // ==> Để chuyển đổi đúng thì cần phải lọc bỏ hết các kí tự tạp trên
 
-    totalPriceElement?.each(function (index, element) {
-      //update text
-      $(totalPriceElement[index]).text(
-        formatCurrency(newTotal.toFixed(2)) + " đ"
+    if (targetArr.length > 0) {
+      searchParams.set("target", targetArr.join(","));
+    }
+
+    if (priceArr.length > 0) {
+      searchParams.set("price", priceArr.join(","));
+    }
+
+    // Update the URL and reload the page
+    window.location.href = currentUrl.toString();
+  });
+
+  //handle auto checkbox after page loading
+  // Parse the URL parameters
+  const params = new URLSearchParams(window.location.search);
+
+  // Set checkboxes for 'factory'
+  if (params.has("factory")) {
+    const factories = params.get("factory").split(",");
+    factories.forEach((factory) => {
+      $(`#factoryFilter .form-check-input[value="${factory}"]`).prop(
+        "checked",
+        true
       );
-
-      //update data-attribute
-      $(totalPriceElement[index]).attr("data-cart-total-price", newTotal);
     });
   }
 
-  $(".childCheckbox").on("change", function () {
-    updateTotalCartPrice();
-  }); // Khi 1 checkBox bị thay đổi thì nó sẽ gọi hàm updataTotalPrice
-  $("#checkboxCart").on("change", updateTotalCartPrice);
-  function formatCurrency(value) {
-    return new Intl.NumberFormat("vi-VN").format(value);
+  // Set checkboxes for 'target'
+  if (params.has("target")) {
+    const targets = params.get("target").split(",");
+    targets.forEach((target) => {
+      $(`#targetFilter .form-check-input[value="${target}"]`).prop(
+        "checked",
+        true
+      );
+    });
   }
 
-  $("#checkboxCart").on("click", function () {
-    var checked = $(this).prop("checked");
-    $(".childCheckbox").prop("checked", checked);
-    $("#labelCheckbox").text(
-      checked ? "Bỏ chọn tất cả" : "Chọn tất cả sản phẩm"
+  // Set checkboxes for 'price'
+  if (params.has("price")) {
+    const prices = params.get("price").split(",");
+    prices.forEach((price) => {
+      $(`#priceFilter .form-check-input[value="${price}"]`).prop(
+        "checked",
+        true
+      );
+    });
+  }
+
+  // Set radio buttons for 'sort'
+  if (params.has("sort")) {
+    const sort = params.get("sort");
+    $(`input[type="radio"][name="radio-sort"][value="${sort}"]`).prop(
+      "checked",
+      true
     );
-    toggleDeleteButton();
-  });
-
-  $(".childCheckbox").on("click", toggleDeleteButton);
-
-  function toggleDeleteButton() {
-    $("#deleteAll").toggle($(".childCheckbox:checked").length > 0);
   }
-
-  // Trigger toast
 })(jQuery);
